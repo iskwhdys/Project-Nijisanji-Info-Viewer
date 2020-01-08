@@ -24,27 +24,6 @@
         </div>
       </div>
 
-      <div class="Feald-Movie">
-        <div class="Cards">
-          <div class="Card" v-for="video in uploadVideos" :key="video.id">
-            <a class="Card-Link" :href="'https://www.youtube.com/watch?v=' + video.id">
-              <div class="Card-Thumbnail">
-                <img class="Card-Thumbnail-Image" :src="video.thumbnail" />
-              </div>
-              <div class="Card-Title">
-                {{ video.title }}
-              </div>
-              <div class="Card-UploadDate">
-                <span>{{ video.uploadDate | moment }}</span>
-              </div>
-              <div class="Card-Info">
-                <span class="Card-InfoItem">再生:{{ video.views }}</span>
-                <span class="Card-InfoItem">高評価:{{ video.likes }}({{ video | getRating }})</span>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -93,8 +72,8 @@ Vue.filter("getRatingStar", function(video: Video) {
 });
 
 @Component
-export default class Home extends Vue {
-  apiUrl: string = "http://localhost:8090/api/";
+export default class NewArrival extends Vue {
+  apiUrl: string = "http://192.168.11.6:8090/api/";
   videos: Video[] = [];
   uploadVideos: Video[] = [];
   reserveVideos: Video[] = [];
