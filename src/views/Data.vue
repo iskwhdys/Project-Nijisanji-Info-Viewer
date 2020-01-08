@@ -1,6 +1,8 @@
 <template>
   <div id="field">
-    DB<br />
+    <br />
+    <br />
+    JsonServer<br />
     <button @click="onClickGetChannelList">全情報をDBから取得</button><br />
     <button @click="onClickSortChannelSubscriberCount">登録者数順にソート</button><br />
     <button @click="onClickPatchChannelInfo">現在の全チャンネル情報をDBに反映</button><br />
@@ -8,13 +10,13 @@
     <br />
     API<br />
     <button @click="onClickUpdateChannelInfo">全てのチャンネル情報をAPI経由で取得してDBに反映</button><br />
-    <button @click="onClickGetChannelUserIcon">全てのチャンネルのユーザーアイコンを取得してDBに反映</button><br />
+    <button @click="onClickGetChannelchannelIcon">全てのチャンネルのユーザーアイコンを取得してDBに反映</button><br />
     <button @click="onClickGetChannelLiveData">全てのチャンネルのライブ状況を取得してDBに反映</button><br />
 
     <br />
 
     <div v-for="channel in channels" :key="channel.id">
-      <img :src="channel.userIcon" />
+      <img :src="channel.channelIcon" />
 
       <label v-if="channel.info.snippet">
         {{ channel.info.snippet.title }}
@@ -42,7 +44,7 @@ import ApiKey from "../assets/ignore.ApiKey.json";
 interface Channel {
   id: string;
   info: any;
-  userIcon: string;
+  channelIcon: string;
   live: string;
 }
 
@@ -76,21 +78,21 @@ export default class Data extends Vue {
     await this.updateChannelInfoDb(channel);
   }
 
-  async onClickGetChannelUserIcon() {
-    console.debug("onClickGetChannelUserIcon-start");
+  async onClickGetChannelchannelIcon() {
+    console.debug("onClickGetChannelchannelIcon-start");
 
     for (const channel of this.channels) {
       const response = await Axios.get(this.apiFunctionUrl + "/base64file", {
         params: { url: channel.info.snippet.thumbnails.default.url }
       });
-      channel.userIcon = "data:image/jpeg;base64," + response.data;
-      await Axios.patch(this.dbUrl + "/channels/" + channel.id, { userIcon: channel.userIcon });
-      console.debug("onClickGetChannelUserIcon-processing:" + channel.id);
+      channel.channelIcon = "data:image/jpeg;base64," + response.data;
+      await Axios.patch(this.dbUrl + "/channels/" + channel.id, { channelIcon: channel.channelIcon });
+      console.debug("onClickGetChannelchannelIcon-processing:" + channel.id);
     }
   }
 
   async onClickGetChannelLiveData() {
-    console.debug("onClickGetChannelUserIcon-start");
+    console.debug("onClickGetChannelchannelIcon-start");
 
     //for (const channel of this.channels) {
     for (const channel of this.channels.slice(0, 1)) {
@@ -106,10 +108,10 @@ export default class Data extends Vue {
       console.debug(xml);
       console.log(xml.getElementsByTagName("entry"));
       
-      console.debug("onClickGetChannelUserIcon-processing:" + channel.id);
+      console.debug("onClickGetChannelchannelIcon-processing:" + channel.id);
     }
 
-    console.debug("onClickGetChannelUserIcon-end");
+    console.debug("onClickGetChannelchannelIcon-end");
   }
 
   async onClickUpdateChannelInfo() {
