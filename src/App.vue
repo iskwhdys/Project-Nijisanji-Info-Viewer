@@ -6,7 +6,8 @@
       </div>
       <div id="Menu">
         <router-link to="/">新着動画</router-link> |
-        <router-link to="/ranking">ランキング</router-link>
+        <router-link to="/ranking">ランキング</router-link> |
+        <router-link to="/manager">管理</router-link>
       </div>
     </div>
 

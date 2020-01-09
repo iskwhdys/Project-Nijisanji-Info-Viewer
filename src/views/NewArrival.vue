@@ -6,7 +6,6 @@
   text-align: left;
   color: #2c3e50;
 
-  display: flex;
   flex-direction: column;
   justify-content: center;
 }
@@ -22,11 +21,32 @@
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
   background-color: white;
   line-height: 1.2;
+  margin: 4px;
 }
 .Card-Link {
-  display: block;
   color: inherit;
   text-decoration: inherit;
+}
+.Card-Thumbnail {
+  position: relative;
+}
+.Card-Thumbnail-Time{
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  padding: 0px 4px;
+  margin: 0px 0px 4px 0px;
+  background: #fff;
+  border-radius: 10px; /*角の丸み*/
+  font-size: 12px;
+}
+.Card-Thumbnail-Duration {
+  color: #4091dd; /*文字色*/
+  border: solid 2px #4091dd; /*線*/
+}
+.Card-Thumbnail-Total {
+  color: #df0000; /*文字色*/
+  border: solid 2px #df0000; /*線*/
 }
 .Card-Thumbnail-Image {
   width: 192px;
@@ -53,8 +73,6 @@
   font-size: 11px;
   color: #999;
   margin: 0px 2px;
-}
-.MovieFeald {
 }
 .LiveFeald {
   padding: 10px;
@@ -95,16 +113,17 @@
           <a class="Card-Link" :href="'https://www.youtube.com/watch?v=' + video.id">
             <div class="Card-Thumbnail">
               <img class="Card-Thumbnail-Image" :src="video.thumbnail" />
+              <span class="Card-Thumbnail-Time Card-Thumbnail-Total">{{  video.liveStart | toLiveTime }}</span>
             </div>
             <div class="Card-Title">
               {{ video.title }}
             </div>
-            <div class="Card-UploadDate">
-              <span>{{ video.liveStart | moment }}</span>
+            <div class="Card-Info">
+              <span class="Card-InfoItem">{{ video.liveStart | toYYYYMMDDHHmm }}</span>
             </div>
             <div class="Card-Info">
-              <span class="Card-InfoItem">再生:{{ video.views }}</span>
-              <span class="Card-InfoItem">高評価:{{ video.likes }}({{ video | getRating }})</span>
+              <span class="Card-InfoItem">👤{{ video.liveViews }}</span>
+              <span class="Card-InfoItem">👍{{ video.likes }}({{ video | getRating }})</span>
             </div>
           </a>
         </div>
@@ -118,16 +137,17 @@
           <a class="Card-Link" :href="'https://www.youtube.com/watch?v=' + video.id">
             <div class="Card-Thumbnail">
               <img class="Card-Thumbnail-Image" :src="video.thumbnail" />
+              <span class="Card-Thumbnail-Time Card-Thumbnail-Duration">{{ video.duration | toTime }}</span>
             </div>
             <div class="Card-Title">
               {{ video.title }}
             </div>
-            <div class="Card-UploadDate">
-              <span>{{ video.uploadDate | moment }}</span>
+            <div class="Card-Info">
+              <span class="Card-InfoItem">{{ video.uploadDate | toYYYYMMDDHHmm }}</span>
             </div>
             <div class="Card-Info">
-              <span class="Card-InfoItem">再生:{{ video.views }}</span>
-              <span class="Card-InfoItem">高評価:{{ video.likes }}({{ video | getRating }})</span>
+              <span class="Card-InfoItem">▶{{ video.views }}</span>
+              <span class="Card-InfoItem">👍{{ video.likes }}({{ video | getRating }})</span>
             </div>
           </a>
         </div>
@@ -164,19 +184,31 @@ interface Video {
   enabled: boolean;
 }
 
-Vue.filter("moment", function(date: Date) {
+Vue.filter("toLiveTime", function(startDate: Date) {
+  const totalSec = moment(new Date()).diff(moment(startDate)) / 1000;
+  const hour = Math.floor(Math.floor(totalSec / 60) / 60);
+  const min = Math.floor((totalSec - hour * 60 * 60) / 60);
+  const sec = totalSec - hour * 60 * 60 - min * 60;
+  const sHour =  (hour > 0 ? hour + "時間" : "") 
+  const sMin = (min > 0 ? min + "分": "") 
+  return sHour + sMin + "経過";
+});
+Vue.filter("toYYYYMMDDHHmm", function(date: Date) {
   return moment(date).format("YYYY/MM/DD HH:mm");
+});
+Vue.filter("toTime", function(totalSec: number) {
+  const hour = Math.floor(Math.floor(totalSec / 60) / 60);
+  const min = Math.floor((totalSec - hour * 60 * 60) / 60);
+  const sec = totalSec - hour * 60 * 60 - min * 60;
+  const text = (hour > 0 ? hour + ":" : "") + (min > 0 ? ("0" + min).slice(-2) + ":" : "") + ("0" + sec).slice(-2);
+
+  return text;
 });
 Vue.filter("getRating", function(video: Video) {
   const sum = video.likes * 5 + video.dislikes;
   const count = video.likes + video.dislikes;
   const rate = sum / count;
   return rate.toFixed(2);
-});
-Vue.filter("getRatingStar", function(video: Video) {
-  const sum = video.likes * 5 + video.dislikes;
-  const count = video.likes + video.dislikes;
-  return "★".repeat(parseInt((sum / count).toFixed(0)));
 });
 
 @Component
