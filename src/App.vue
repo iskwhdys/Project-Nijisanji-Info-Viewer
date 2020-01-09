@@ -2,12 +2,13 @@
   <div id="app">
     <div id="Header">
       <div id="Banner">
-        <img src="../src/assets/logo.png"/> 
+        <img src="../src/assets/logo.png" />
       </div>
       <div id="Menu">
-        <router-link to="/">新着動画</router-link> |
-        <router-link to="/ranking">ランキング</router-link> |
-        <router-link to="/manager">管理</router-link>
+        <router-link class="MenuItem" to="/">新着動画</router-link>
+        <router-link class="MenuItem" to="/ranking">ランキング</router-link>
+        <router-link class="MenuItem" to="/ranking">配信予定</router-link>
+        <router-link class="MenuItem" to="/manager">管理</router-link>
       </div>
     </div>
 
@@ -36,16 +37,22 @@
   justify-content: center;
 }
 
-#nav {
-  padding: 30px;
+#Menu {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.MenuItem {
+  padding: 10px;
+  margin: 10px;
+  color: #494949; /*文字色*/
+  border: solid 2.5px #d4d4d4; /*左線*/
+  text-decoration: none;
+}
+.MenuItem:hover {
+  text-decoration: underline;
+  
+  border: solid 2.5px #888888; /*左線*/
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
 }
 </style>

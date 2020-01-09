@@ -27,10 +27,17 @@
   color: inherit;
   text-decoration: inherit;
 }
+.Card-Link:hover {
+  color: #00b5d1;
+}
+.Card-Link:hover .Card-Thumbnail-Time {
+  visibility: hidden;
+}
+
 .Card-Thumbnail {
   position: relative;
 }
-.Card-Thumbnail-Time{
+.Card-Thumbnail-Time {
   position: absolute;
   right: 0px;
   bottom: 0px;
@@ -113,7 +120,7 @@
           <a class="Card-Link" :href="'https://www.youtube.com/watch?v=' + video.id">
             <div class="Card-Thumbnail">
               <img class="Card-Thumbnail-Image" :src="video.thumbnail" />
-              <span class="Card-Thumbnail-Time Card-Thumbnail-Total">{{  video.liveStart | toLiveTime }}</span>
+              <span class="Card-Thumbnail-Time Card-Thumbnail-Total">{{ video.liveStart | toLiveTime }}</span>
             </div>
             <div class="Card-Title">
               {{ video.title }}
@@ -189,8 +196,8 @@ Vue.filter("toLiveTime", function(startDate: Date) {
   const hour = Math.floor(Math.floor(totalSec / 60) / 60);
   const min = Math.floor((totalSec - hour * 60 * 60) / 60);
   const sec = totalSec - hour * 60 * 60 - min * 60;
-  const sHour =  (hour > 0 ? hour + "時間" : "") 
-  const sMin = (min > 0 ? min + "分": "") 
+  const sHour = hour > 0 ? hour + "時間" : "";
+  const sMin = min > 0 ? min + "分" : "";
   return sHour + sMin + "経過";
 });
 Vue.filter("toYYYYMMDDHHmm", function(date: Date) {
@@ -226,7 +233,7 @@ export default class NewArrival extends Vue {
     this.liveVideos = (await Axios.get(this.apiUrl + "/liveVideos", {})).data;
 
     this.getUploadedVideo(this.videos).forEach(v => this.uploadVideos.push(v));
-    
+
     console.debug("created-end");
   }
 

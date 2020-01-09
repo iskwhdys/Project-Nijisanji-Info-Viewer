@@ -25,7 +25,8 @@ export default class Manager extends Vue {
   async onClickRunBatch(name: string) {
     console.debug("");
     console.debug("onClickRunBatch-start");
-
+    
+    this.responseMessage = "processing"
     this.responseMessage = await Axios.get(this.batchUrl + name, {});
 
     console.debug("onClickRunBatch-end");
