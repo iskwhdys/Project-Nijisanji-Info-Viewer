@@ -19,7 +19,7 @@ import Axios from "axios";
 @Component
 export default class Manager extends Vue {
   batchUrl: string = "http://192.168.11.6:8090/batch/?name=";
-  batchList = [{ name: "update10min" }, { name: "updateRealTime" }, { name: "updateLiveVideo" }];
+  batchList = [{ name: "update10min" }, { name: "updateRealTime" }, { name: "updateLiveVideo" }, { name: "updateVideoType" }];
   responseMessage: string = "";
 
   async onClickRunBatch(name: string) {

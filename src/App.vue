@@ -5,8 +5,8 @@
         <img src="../src/assets/logo.png" />
       </div>
       <div id="Menu">
-        <router-link class="MenuItem" to="/">新着動画</router-link>
-        <router-link class="MenuItem" to="/ranking">ランキング</router-link>
+        <router-link class="MenuItem" to="/">ライブ・新着</router-link>
+        <router-link class="MenuItem" to="/ranking">24時間ランキング</router-link>
         <router-link class="MenuItem" to="/ranking">配信予定</router-link>
         <router-link class="MenuItem" to="/manager">管理</router-link>
       </div>
@@ -45,14 +45,12 @@
 .MenuItem {
   padding: 10px;
   margin: 10px;
-  color: #494949; /*文字色*/
-  border: solid 2.5px #d4d4d4; /*左線*/
+  color: #494949; 
+  border: solid 2.5px #d4d4d4;
   text-decoration: none;
 }
 .MenuItem:hover {
   text-decoration: underline;
-  
-  border: solid 2.5px #888888; /*左線*/
-
+  border: solid 2.5px #888888;
 }
 </style>

@@ -130,7 +130,7 @@
             </div>
             <div class="Card-Info">
               <span class="Card-InfoItem">👤{{ video.liveViews }}</span>
-              <span class="Card-InfoItem">👍{{ video.likes }}({{ video | getRating }})</span>
+              <span v-if="video.likes != 0" class="Card-InfoItem">👍{{ video.likes }}({{ video | getRating }})</span>
             </div>
           </a>
         </div>
@@ -154,7 +154,7 @@
             </div>
             <div class="Card-Info">
               <span class="Card-InfoItem">▶{{ video.views }}</span>
-              <span class="Card-InfoItem">👍{{ video.likes }}({{ video | getRating }})</span>
+              <span v-if="video.likes != 0" class="Card-InfoItem">👍{{ video.likes }}({{ video | getRating }})</span>
             </div>
           </a>
         </div>
@@ -229,30 +229,10 @@ export default class NewArrival extends Vue {
     console.debug("");
     console.debug("created-start");
 
-    this.videos = (await Axios.get(this.apiUrl + "/dailyVideos", {})).data;
+    this.uploadVideos = (await Axios.get(this.apiUrl + "/dailyVideos", {})).data;
     this.liveVideos = (await Axios.get(this.apiUrl + "/liveVideos", {})).data;
 
-    this.getUploadedVideo(this.videos).forEach(v => this.uploadVideos.push(v));
-
     console.debug("created-end");
-  }
-
-  getReserveVideo(videos: Video[]) {
-    var list = new Array();
-    for (const video of videos) {
-      if (video.liveSchedule && !video.liveStart) {
-        list.push(video);
-      } else if (video.views == 0) {
-        list.push(video);
-      }
-    }
-    return list;
-  }
-  getUploadedVideo(videos: Video[]) {
-    return videos.filter(v => {
-      if (v.liveEnd) return true;
-      if (!v.liveStart && v.views > 0) return true;
-    });
   }
 }
 </script>
