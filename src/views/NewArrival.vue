@@ -1,36 +1,54 @@
 <style lang="scss">
-#Contents {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: left;
-  color: #2c3e50;
 
-  flex-direction: column;
-  justify-content: center;
+.Size-MovieFeald {
+  width: 100%;
+  padding: 5px;
+  margin: 5px 0px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.Size-Card {
+  width: 144px;
+  box-shadow: 0 0 6px rgb(0, 0, 0, 0.5);
+  line-height: 1.2;
+  margin: 8px;
+}
+.Card-Thumbnail-Image {
+  width: 144px;
+  height: 81px;
+  object-fit: cover;
+}
+@media screen and (min-width: 560px) {
+  .Size-Card {
+    width: 176px;
+  }
+  .Card-Thumbnail-Image {
+    width: 176px;
+    height: 99px;
+  }
+}
+@media screen and (min-width: 960px) {
+  .Size-MovieFeald {
+    width: 1152px;
+    padding: 5px;
+    margin: 5px 0px;
+    font-size: 18px;
+    font-weight: bold;
+  }
 }
 
 .CardList {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: center;
 }
+
 .Card {
-  width: 192px;
-  box-shadow: 0 0 6px rgb(0, 0, 0, 0.5);
   background-color: white;
-  line-height: 1.2;
-  margin: 6px;
   position: relative;
+  font-weight: normal;
 }
-/*
-.Card-Shadow-1{    box-shadow: 0 0 6px rgb(3, 101, 178);}
-.Card-Shadow-2{    box-shadow: 0 0 6px rgb(77, 193, 240);}
-.Card-Shadow-3{    box-shadow: 0 0 6px rgba(0, 156, 78);}
-.Card-Shadow-4{    box-shadow: 0 0 6px rgba(239,122,3);}
-.Card-Shadow-5{    box-shadow: 0 0 6px rgba(219,8,45);}
-*/
+
 .Card-Score-1,
 .Card-Score-2 {
   box-shadow: 0 0 10px rgb(77, 193, 240);
@@ -85,11 +103,6 @@
   color: #df0000; /*文字色*/
   border: solid 2px #df0000; /*線*/
 }
-.Card-Thumbnail-Image {
-  width: 192px;
-  height: 107px;
-  object-fit: cover;
-}
 .Card-Title {
   font-size: 14px;
   height: 64px;
@@ -108,6 +121,7 @@
   font-size: 11px;
   color: #999;
   margin: 0px 2px;
+  text-align: left;
 }
 .Card-Channel {
   position: absolute;
@@ -122,40 +136,45 @@
   height: 30px;
   border-radius: 50%;
 }
-.LiveFeald {
-  padding: 10px;
-  margin: 10px;
+
+.MovieFeald {
   color: #494949; /*文字色*/
   background: #f4f4f4; /*背景色*/
+}
+.LiveFeald {
   border-left: solid 5px #ff0000; /*左線*/
   border-bottom: solid 3px #ff0000; /*下線*/
 }
-.LiveFealdTitel {
-  font-size: 18px;
-  font-weight: bold;
+.LiveFealdTitle {
   border-bottom: solid 3px #ff0000; /*下線*/
 }
 .UploadFeald {
-  padding: 10px;
-  margin: 10px;
-  color: #494949; /*文字色*/
-  background: #f4f4f4; /*背景色*/
+  border-left: solid 5px #48d87f; /*左線*/
+  border-bottom: solid 3px #48d87f; /*下線*/
+}
+.UploadFealdTitle {
+  border-bottom: solid 3px #48d87f; /*下線*/
+}
+.ArchiveFeald {
   border-left: solid 5px #7db4e6; /*左線*/
   border-bottom: solid 3px #7db4e6; /*下線*/
 }
-.UploadFealdTitel {
-  font-size: 18px;
-  font-weight: bold;
+.ArchiveFealdTitle {
   border-bottom: solid 3px #7db4e6; /*下線*/
 }
 </style>
 
 <template>
-  <div id="Contents">
-    <div class="LiveFeald">
-      <div class="LiveFealdTitel">ライブ配信中</div>
+  <div>
+    <div class="Size-MovieFeald MovieFeald LiveFeald">
+      <div class="LiveFealdTitle">ライブ配信中</div>
       <div class="CardList ">
-        <div class="Card" :class="(video.liveViews / 1000) | getFrameColor" v-for="video in liveVideos" :key="video.id">
+        <div
+          class="Size-Card Card"
+          :class="(video.liveViews / 1000) | getFrameColor"
+          v-for="video in liveVideos"
+          :key="video.id"
+        >
           <a class="Card-Link" :href="'https://www.youtube.com/watch?v=' + video.id">
             <div class="Card-Thumbnail">
               <img class="Card-Thumbnail-Image" :src="video.thumbnail" />
@@ -179,10 +198,15 @@
       </div>
     </div>
 
-    <div class="UploadFeald">
-      <div class="UploadFealdTitel">新着動画</div>
+    <div class="Size-MovieFeald MovieFeald UploadFeald">
+      <div class="UploadFealdTitle">新着動画</div>
       <div class="CardList ">
-        <div class="Card" :class="(video.views / 20000) | getFrameColor" v-for="video in uploadVideos" :key="video.id">
+        <div
+          class="Size-Card Card"
+          :class="(video.views / 20000) | getFrameColor"
+          v-for="video in uploadVideos"
+          :key="video.id"
+        >
           <a class="Card-Link" :href="'https://www.youtube.com/watch?v=' + video.id">
             <div class="Card-Thumbnail">
               <img class="Card-Thumbnail-Image" :src="video.thumbnail" />
@@ -206,10 +230,15 @@
       </div>
     </div>
 
-    <div class="UploadFeald">
-      <div class="UploadFealdTitel">ライブアーカイブ</div>
+    <div class="Size-MovieFeald MovieFeald ArchiveFeald">
+      <div class="ArchiveFealdTitle">ライブアーカイブ</div>
       <div class="CardList">
-        <div class="Card" :class="(video.views / 20000) | getFrameColor" v-for="video in dailyArchives" :key="video.id">
+        <div
+          class="Size-Card Card"
+          :class="(video.views / 20000) | getFrameColor"
+          v-for="video in dailyArchives"
+          :key="video.id"
+        >
           <a class="Card-Link" :href="'https://www.youtube.com/watch?v=' + video.id">
             <div class="Card-Thumbnail">
               <img class="Card-Thumbnail-Image" :src="video.thumbnail" />
@@ -310,17 +339,31 @@ export default class NewArrival extends Vue {
     console.debug("");
     console.debug("created-start");
 
-    const liveVideos = (await Axios.get(this.apiUrl + "/liveVideos", {})).data;
-    const dailyArchives = (await Axios.get(this.apiUrl + "/dailyArchives", {})).data;
-    const uploadVideos = (await Axios.get(this.apiUrl + "/dailyVideos", {})).data;
-
-    await this.downloadChannelThumbnail(liveVideos.concat(dailyArchives, uploadVideos));
-
-    this.liveVideos = liveVideos;
-    this.dailyArchives = dailyArchives;
-    this.uploadVideos = uploadVideos;
+    Axios.get(this.apiUrl + "/liveVideos", {}).then(async response => {
+      this.liveVideos = await this.downloadChannelThumbnail2(response.data);
+    });
+    Axios.get(this.apiUrl + "/dailyVideos", {}).then(async response => {
+      this.uploadVideos = await this.downloadChannelThumbnail2(response.data);
+    });
+    Axios.get(this.apiUrl + "/dailyArchives", {}).then(async response => {
+      this.dailyArchives = await this.downloadChannelThumbnail2(response.data);
+    });
 
     console.debug("created-end");
+  }
+
+  async downloadChannelThumbnail2(videos: Video[]) {
+    var channels: Channel[] = [];
+
+    for (const v of videos) {
+      var channel: Channel = channels.find(c => c.id == v.channelId) as Channel;
+      if (channel == null) {
+        channel = (await Axios.get(this.apiUrl + "channel/" + v.channelId, {})).data;
+        channels.push(channel);
+      }
+      v.channel = channel;
+    }
+    return videos;
   }
 
   async downloadChannelThumbnail(videos: Video[]) {
