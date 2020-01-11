@@ -137,8 +137,9 @@
       </div>
     </div>
 
+    
     <div class="UploadFeald">
-      <div class="UploadFealdTitel">アップロード動画</div>
+      <div class="UploadFealdTitel">新着動画</div>
       <div class="CardList ">
         <div class="Card" v-for="video in uploadVideos" :key="video.id">
           <a class="Card-Link" :href="'https://www.youtube.com/watch?v=' + video.id">
@@ -160,6 +161,35 @@
         </div>
       </div>
     </div>
+
+
+    <div class="UploadFeald">
+      <div class="UploadFealdTitel">ライブアーカイブ</div>
+      <div class="CardList ">
+        <div class="Card" v-for="video in dailyArchives" :key="video.id">
+          <a class="Card-Link" :href="'https://www.youtube.com/watch?v=' + video.id">
+            <div class="Card-Thumbnail">
+              <img class="Card-Thumbnail-Image" :src="video.thumbnail" />
+              <span class="Card-Thumbnail-Time Card-Thumbnail-Duration">{{ video.duration | toTime }}</span>
+            </div>
+            <div class="Card-Title">
+              {{ video.title }}
+            </div>
+            <div class="Card-Info">
+              <span class="Card-InfoItem">{{ video.liveStart | toYYYYMMDDHHmm }}</span>
+            </div>
+            <div class="Card-Info">
+              <span class="Card-InfoItem">▶{{ video.views }}</span>
+              <span v-if="video.likes != 0" class="Card-InfoItem">👍{{ video.likes }}({{ video | getRating }})</span>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+
+
+
   </div>
 </template>
 
@@ -222,15 +252,18 @@ Vue.filter("getRating", function(video: Video) {
 export default class NewArrival extends Vue {
   apiUrl: string = "http://192.168.11.6:8090/api/";
   videos: Video[] = [];
-  uploadVideos: Video[] = [];
   liveVideos: Video[] = [];
+  dailyArchives: Video[] = [];
+  uploadVideos: Video[] = [];
 
   async created() {
     console.debug("");
     console.debug("created-start");
 
-    this.uploadVideos = (await Axios.get(this.apiUrl + "/dailyVideos", {})).data;
     this.liveVideos = (await Axios.get(this.apiUrl + "/liveVideos", {})).data;
+    this.dailyArchives = (await Axios.get(this.apiUrl + "/dailyArchives", {})).data;
+    this.uploadVideos = (await Axios.get(this.apiUrl + "/dailyVideos", {})).data;
+    
 
     console.debug("created-end");
   }
