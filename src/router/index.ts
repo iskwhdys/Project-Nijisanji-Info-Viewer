@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import NewArrival from '../views/NewArrival.vue'
+import Home from '../views/Home.vue'
 import Ranking from '../views/Ranking.vue'
 import Manager from '../views/Manager.vue'
 
@@ -9,8 +9,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'newArrival',
-    component: NewArrival
+    name: 'home',
+    component: Home
   },
   {
     path: '/ranking',

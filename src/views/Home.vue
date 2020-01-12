@@ -328,7 +328,7 @@ Vue.filter("getFrameColor", function(score: number) {
 });
 
 @Component
-export default class NewArrival extends Vue {
+export default class Home extends Vue {
   apiUrl: string = "http://192.168.11.6:8090/api/";
   videos: Video[] = [];
   liveVideos: Video[] = [];
@@ -336,9 +336,6 @@ export default class NewArrival extends Vue {
   uploadVideos: Video[] = [];
 
   async created() {
-    console.debug("");
-    console.debug("created-start");
-
     Axios.get(this.apiUrl + "/liveVideos", {}).then(async response => {
       this.liveVideos = await this.downloadChannelThumbnail2(response.data);
     });
@@ -348,8 +345,6 @@ export default class NewArrival extends Vue {
     Axios.get(this.apiUrl + "/dailyArchives", {}).then(async response => {
       this.dailyArchives = await this.downloadChannelThumbnail2(response.data);
     });
-
-    console.debug("created-end");
   }
 
   async downloadChannelThumbnail2(videos: Video[]) {

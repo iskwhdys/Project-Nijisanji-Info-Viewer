@@ -1,6 +1,10 @@
 <template>
   <div>
     <div>
+      
+      <label for="checkbox">自動更新：{{ checked }}</label>
+      <input type="checkbox" id="autoUpdate" v-model="checked">
+
       <div v-for="batch of batchList" :key="batch.name">
         <button v-on:click="onClickRunBatch(batch.name)">{{ batch.name }}</button> <br />
         <br>
@@ -27,23 +31,26 @@ export default class Manager extends Vue {
   responseMessage: string = "";
 
   startTime:String = "";
+  checked:Boolean = false;
 
-  created(){      
-    setInterval(()=>{
-      this.startTime = moment(new Date()).format("HH:mm:ss");
+  created(){ 
+    var f = ()=>{
+      if(this.checked == false) {
+        return;
+      } 
+      this.startTime = "データ取得開始" +  moment(new Date()).format("HH:mm:ss");
       this.onClickRunBatch(this.batchList[0].name);
-      console.log(this.startTime);
-    }, 1000 * 60 * 10);
+      this.startTime = "データ取得完了" +  moment(new Date()).format("HH:mm:ss");
+    };
+    f.call(null);
+
+    setInterval(f, 1000 * 60 * 10);
   }
 
   async onClickRunBatch(name: string) {
-    console.debug("");
-    console.debug("onClickRunBatch-start");
     
     this.responseMessage = "processing"
     this.responseMessage = await Axios.get(this.batchUrl + name, {});
-
-    console.debug("onClickRunBatch-end");
   }
 }
 </script>

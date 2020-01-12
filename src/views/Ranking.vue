@@ -85,8 +85,6 @@ export default class NewArrival extends Vue {
   ];
 
   async created() {
-    console.debug("");
-    console.debug("created-start");
 
     this.videos = (await Axios.get(this.apiUrl + "/dailyVideos", {})).data;
 
@@ -94,7 +92,6 @@ export default class NewArrival extends Vue {
     this.getReserveVideo(this.videos).forEach(v => this.reserveVideos.push(v));
     this.getLiveVideo(this.videos).forEach(v => this.liveVideos.push(v));
 
-    console.debug("created-end");
   }
 
   getReserveVideo(videos: Video[]) {
