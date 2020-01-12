@@ -26,8 +26,12 @@ import moment from "moment";
 
 @Component
 export default class Manager extends Vue {
+  // 本番用
   batchUrl: string = "http://ik1-330-25303.vs.sakura.ne.jp:8090/batch/?name=";
-  batchList = [{ name: "update10min" }, { name: "updateRealTime" }, { name: "updateLiveVideo" }, { name: "updateVideoType" }, { name: "update1day" }];
+  // 開発用
+  //batchUrl: string = "http://localhost:8090/batch/?name=";
+
+  batchList = [{ name: "update10min" }, { name: "updateRealTime" }, { name: "updateLiveVideo" }, { name: "updateVideoType" }, { name: "update1day" }, {name:"resizeVideoThumbnail"}];
   responseMessage: string = "";
 
   startTime:String = "";

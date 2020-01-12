@@ -15,7 +15,7 @@
 }
 .Card-Thumbnail-Image {
   width: 144px;
-  height: 81px;
+  height: 80px;
   object-fit: cover;
 }
 @media screen and (min-width: 560px) {
@@ -24,7 +24,7 @@
   }
   .Card-Thumbnail-Image {
     width: 176px;
-    height: 99px;
+    height: 98px;
   }
 }
 @media screen and (min-width: 960px) {
@@ -329,8 +329,11 @@ Vue.filter("getFrameColor", function(score: number) {
 
 @Component
 export default class Home extends Vue {
-  
+  // 本番用
   apiUrl: string = "http://ik1-330-25303.vs.sakura.ne.jp:8090/api/";
+  // 開発用
+  // apiUrl: string = "http://localhost:8090/api/";
+
   videos: Video[] = [];
   liveVideos: Video[] = [];
   dailyArchives: Video[] = [];
@@ -354,7 +357,7 @@ export default class Home extends Vue {
     for (const v of videos) {
       var channel: Channel = channels.find(c => c.id == v.channelId) as Channel;
       if (channel == null) {
-        channel = (await Axios.get(this.apiUrl + "channel/" + v.channelId, {})).data;
+        channel = (await Axios.get(this.apiUrl + "channel/" + v.channelId + "?MiniThumbnail=0", {})).data;
         channels.push(channel);
       }
       v.channel = channel;
