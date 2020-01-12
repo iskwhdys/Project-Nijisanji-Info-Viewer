@@ -329,36 +329,23 @@ Vue.filter("getFrameColor", function(score: number) {
 
 @Component
 export default class Home extends Vue {
-  apiUrl: string = "http://192.168.11.6:8090/api/";
+  
+  apiUrl: string = "http://ik1-330-25303.vs.sakura.ne.jp:8090/api/";
   videos: Video[] = [];
   liveVideos: Video[] = [];
   dailyArchives: Video[] = [];
   uploadVideos: Video[] = [];
 
   async created() {
-    Axios.get(this.apiUrl + "/liveVideos", {}).then(async response => {
-      this.liveVideos = await this.downloadChannelThumbnail2(response.data);
+    Axios.get(this.apiUrl + "liveVideos", {}).then(async response => {
+      this.liveVideos = await this.downloadChannelThumbnail(response.data);
     });
-    Axios.get(this.apiUrl + "/dailyVideos", {}).then(async response => {
-      this.uploadVideos = await this.downloadChannelThumbnail2(response.data);
+    Axios.get(this.apiUrl + "dailyVideos", {}).then(async response => {
+      this.uploadVideos = await this.downloadChannelThumbnail(response.data);
     });
-    Axios.get(this.apiUrl + "/dailyArchives", {}).then(async response => {
-      this.dailyArchives = await this.downloadChannelThumbnail2(response.data);
+    Axios.get(this.apiUrl + "dailyArchives", {}).then(async response => {
+      this.dailyArchives = await this.downloadChannelThumbnail(response.data);
     });
-  }
-
-  async downloadChannelThumbnail2(videos: Video[]) {
-    var channels: Channel[] = [];
-
-    for (const v of videos) {
-      var channel: Channel = channels.find(c => c.id == v.channelId) as Channel;
-      if (channel == null) {
-        channel = (await Axios.get(this.apiUrl + "channel/" + v.channelId, {})).data;
-        channels.push(channel);
-      }
-      v.channel = channel;
-    }
-    return videos;
   }
 
   async downloadChannelThumbnail(videos: Video[]) {
@@ -372,6 +359,8 @@ export default class Home extends Vue {
       }
       v.channel = channel;
     }
+    return videos;
   }
+
 }
 </script>

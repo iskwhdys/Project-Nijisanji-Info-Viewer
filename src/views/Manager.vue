@@ -26,7 +26,7 @@ import moment from "moment";
 
 @Component
 export default class Manager extends Vue {
-  batchUrl: string = "http://192.168.11.6:8090/batch/?name=";
+  batchUrl: string = "http://ik1-330-25303.vs.sakura.ne.jp:8090/batch/?name=";
   batchList = [{ name: "update10min" }, { name: "updateRealTime" }, { name: "updateLiveVideo" }, { name: "updateVideoType" }, { name: "update1day" }];
   responseMessage: string = "";
 
