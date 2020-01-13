@@ -1,5 +1,4 @@
 <style lang="scss">
-
 .Size-MovieFeald {
   width: 100%;
   padding: 5px;
@@ -41,35 +40,33 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+  align-items: center;
+}
+
+.Action-Item {
+  box-shadow: 0 0 6px rgb(0, 0, 0, 0.5);
+  border-radius: 50%;
+  background: #ffffff; /*背景色*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.Action-Item-Title {
+  width: 30px;
+  height: 30px;
+  margin: 0px 10px;
+}
+.Action-Item-List {
+  width: 40px;
+  height: 40px;
+  margin: 0px 10px;
 }
 
 .Card {
+  justify-content: center;
   background-color: white;
   position: relative;
   font-weight: normal;
-}
-
-.Card-Score-1,
-.Card-Score-2 {
-  box-shadow: 0 0 10px rgb(77, 193, 240);
-}
-.Card-Score-1:hover,
-.Card-Score-2:hover {
-  box-shadow: 0 0 20px rgb(77, 193, 240);
-}
-.Card-Score-3,
-.Card-Score-4 {
-  box-shadow: 0 0 10px rgba(239, 122, 3);
-}
-.Card-Score-3:hover,
-.Card-Score-4:hover {
-  box-shadow: 0 0 20px rgba(239, 122, 3);
-}
-.Card-Score-5 {
-  box-shadow: 0 0 12px rgba(219, 8, 45);
-}
-.Card-Score-5:hover {
-  box-shadow: 0 0 24px rgba(219, 8, 45);
 }
 .Card-Link {
   color: inherit;
@@ -162,12 +159,41 @@
 .ArchiveFealdTitle {
   border-bottom: solid 3px #7db4e6; /*下線*/
 }
+.Card-Score-1,
+.Card-Score-2 {
+  box-shadow: 0 0 10px rgb(77, 193, 240);
+}
+.Card-Score-1:hover,
+.Card-Score-2:hover {
+  box-shadow: 0 0 20px rgb(77, 193, 240);
+}
+.Card-Score-3,
+.Card-Score-4 {
+  box-shadow: 0 0 10px rgba(239, 122, 3);
+}
+.Card-Score-3:hover,
+.Card-Score-4:hover {
+  box-shadow: 0 0 20px rgba(239, 122, 3);
+}
+.Card-Score-5 {
+  box-shadow: 0 0 12px rgba(219, 8, 45);
+}
+.Card-Score-5:hover {
+  box-shadow: 0 0 24px rgba(219, 8, 45);
+}
 </style>
 
 <template>
   <div>
     <div class="Size-MovieFeald MovieFeald LiveFeald">
-      <div class="LiveFealdTitle">ライブ配信中</div>
+      <div class="LiveFealdTitle CardList">
+        <span>ライブ配信中</span>
+        <span
+          class="Action-Item Action-Item-Title fas fa-redo"
+          v-on:click="reloadLiveVideos"
+          :class="isLiveReloading ? 'fa-sync fa-spin' : ''"
+        />
+      </div>
       <div class="CardList ">
         <div
           class="Size-Card Card"
@@ -199,7 +225,14 @@
     </div>
 
     <div class="Size-MovieFeald MovieFeald UploadFeald">
-      <div class="UploadFealdTitle">新着動画</div>
+      <div class="UploadFealdTitle CardList">
+        <span>新着動画</span>
+        <span
+          class="Action-Item Action-Item-Title fas fa-redo"
+          v-on:click="reloadUploadVideos"
+          :class="isUploadReloading ? 'fa-sync fa-spin' : ''"
+        />
+      </div>
       <div class="CardList ">
         <div
           class="Size-Card Card"
@@ -227,16 +260,30 @@
             </a>
           </div>
         </div>
+        <div class="Action-Item Action-Item-List">
+          <i
+            class="fas fa-lg"
+            v-on:click="getUploadVideos"
+            :class="isUploadGetting ? 'fa-sync fa-spin' : 'fa-arrow-right'"
+          ></i>
+        </div>
       </div>
     </div>
 
     <div class="Size-MovieFeald MovieFeald ArchiveFeald">
-      <div class="ArchiveFealdTitle">ライブアーカイブ</div>
+      <div class="ArchiveFealdTitle CardList">
+        <span>ライブアーカイブ</span>
+        <span
+          class="Action-Item Action-Item-Title fas fa-redo"
+          v-on:click="reloadArchiveVideos"
+          :class="isArchiveReloading ? 'fa-sync fa-spin' : ''"
+        />
+      </div>
       <div class="CardList">
         <div
           class="Size-Card Card"
           :class="(video.views / 20000) | getFrameColor"
-          v-for="video in dailyArchives"
+          v-for="video in archiveVideos"
           :key="video.id"
         >
           <a class="Card-Link" :href="'https://www.youtube.com/watch?v=' + video.id">
@@ -259,6 +306,13 @@
             </a>
           </div>
         </div>
+        <div class="Action-Item Action-Item-List">
+          <i
+            class="fas fa-lg"
+            v-on:click="getArchiveVideos"
+            :class="isArchiveGetting ? 'fa-sync fa-spin' : 'fa-arrow-right'"
+          ></i>
+        </div>
       </div>
     </div>
   </div>
@@ -268,7 +322,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import Axios from "axios";
 import moment from "moment";
-
 interface Channel {
   id: string;
   title: string;
@@ -334,21 +387,80 @@ export default class Home extends Vue {
   // 開発用
   // apiUrl: string = "http://localhost:8090/api/";
 
-  videos: Video[] = [];
   liveVideos: Video[] = [];
-  dailyArchives: Video[] = [];
   uploadVideos: Video[] = [];
+  archiveVideos: Video[] = [];
+
+  isLiveReloading: boolean = false;
+  isUploadReloading: boolean = false;
+  isArchiveReloading: boolean = false;
+
+  // isLiveGetting: boolean = false;
+  isUploadGetting: boolean = false;
+  isArchiveGetting: boolean = false;
 
   async created() {
-    Axios.get(this.apiUrl + "liveVideos", {}).then(async response => {
-      this.liveVideos = await this.downloadChannelThumbnail(response.data);
-    });
-    Axios.get(this.apiUrl + "dailyVideos", {}).then(async response => {
-      this.uploadVideos = await this.downloadChannelThumbnail(response.data);
-    });
-    Axios.get(this.apiUrl + "dailyArchives", {}).then(async response => {
-      this.dailyArchives = await this.downloadChannelThumbnail(response.data);
-    });
+    this.reloadLiveVideos();
+    this.reloadUploadVideos();
+    this.reloadArchiveVideos();
+  }
+
+  async reloadLiveVideos() {
+    if (this.isLiveReloading) return;
+    this.isLiveReloading = true;
+    this.liveVideos = [];
+    Axios.get(this.apiUrl + "liveVideos", {})
+      .then(async response => {
+        this.liveVideos = await this.downloadChannelThumbnail(response.data);
+      })
+      .finally(() => (this.isLiveReloading = false));
+  }
+
+  async reloadUploadVideos() {
+    if (this.isUploadReloading) return;
+    this.isUploadReloading = true;
+    this.uploadVideos = [];
+    Axios.get(this.apiUrl + "dailyVideos", {})
+      .then(async response => {
+        this.uploadVideos = await this.downloadChannelThumbnail(response.data);
+      })
+      .finally(() => (this.isUploadReloading = false));
+  }
+
+  async reloadArchiveVideos() {
+    if (this.isArchiveReloading) return;
+    this.isArchiveReloading = true;
+    this.archiveVideos = [];
+    Axios.get(this.apiUrl + "dailyArchives", {})
+      .then(async response => {
+        this.archiveVideos = await this.downloadChannelThumbnail(response.data);
+      })
+      .finally(() => (this.isArchiveReloading = false));
+  }
+
+  async getUploadVideos() {
+    if (this.isUploadGetting) return;
+    this.isUploadGetting = true;
+    const lastVideo = this.uploadVideos[this.uploadVideos.length - 1];
+    const from = moment(lastVideo.uploadDate).format("YYYY-MM-DD HH:mm:ss");
+    Axios.get(this.apiUrl + "uploadVideos?from=" + from + "&count=10", {})
+      .then(async response => {
+        const data = await this.downloadChannelThumbnail(response.data);
+        data.forEach(d => this.uploadVideos.push(d));
+      })
+      .finally(() => (this.isUploadGetting = false));
+  }
+  async getArchiveVideos() {
+    if (this.isArchiveGetting) return;
+    this.isArchiveGetting = true;
+    const lastVideo = this.archiveVideos[this.archiveVideos.length - 1];
+    const from = moment(lastVideo.liveStart).format("YYYY-MM-DD HH:mm:ss");
+    Axios.get(this.apiUrl + "archiveVideos?from=" + from + "&count=30", {})
+      .then(async response => {
+        const data = await this.downloadChannelThumbnail(response.data);
+        data.forEach(d => this.archiveVideos.push(d));
+      })
+      .finally(() => (this.isArchiveGetting = false));
   }
 
   async downloadChannelThumbnail(videos: Video[]) {
@@ -364,6 +476,5 @@ export default class Home extends Vue {
     }
     return videos;
   }
-
 }
 </script>
