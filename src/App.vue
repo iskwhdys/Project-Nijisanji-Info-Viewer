@@ -5,13 +5,15 @@
        <a href = "./"><img src="../src/assets/logo.png" /></a>
       </div>
       <div id="Menu">
-        <router-link exact class="MenuItem" to="/">ライブ・新着</router-link>
+        
+        <router-link exact class="MenuItem" to="/">新着総合</router-link>
+        <span class="MenuItem" >ライブ中</span>
+        <span class="MenuItem" >アーカイブ</span>
+        <span class="MenuItem" >新着動画</span>
+        <span class="MenuItem" >配信予定</span>
         <router-link class="MenuItem" to="/ranking">24時間ランキング</router-link>
-        <router-link class="MenuItem" to="/ranking">配信予定</router-link>
-        <router-link class="MenuItem" to="/manager">管理</router-link>
       </div>
     </div>
-
     <router-view id="Main"/>
 
     <div id="Footer"></div>

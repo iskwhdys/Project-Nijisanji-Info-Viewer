@@ -54,7 +54,7 @@
 .Action-Item-Title {
   width: 30px;
   height: 30px;
-  margin: 0px 10px;
+  margin: 2px 5px;
 }
 .Action-Item-List {
   width: 40px;
@@ -260,12 +260,8 @@
             </a>
           </div>
         </div>
-        <div class="Action-Item Action-Item-List">
-          <i
-            class="fas fa-lg"
-            v-on:click="getUploadVideos"
-            :class="isUploadGetting ? 'fa-sync fa-spin' : 'fa-arrow-right'"
-          ></i>
+        <div class="Action-Item Action-Item-List" v-on:click="getUploadVideos">
+          <i class="fas fa-lg" :class="isUploadGetting ? 'fa-sync fa-spin' : 'fa-arrow-right'"></i>
         </div>
       </div>
     </div>
@@ -306,12 +302,8 @@
             </a>
           </div>
         </div>
-        <div class="Action-Item Action-Item-List">
-          <i
-            class="fas fa-lg"
-            v-on:click="getArchiveVideos"
-            :class="isArchiveGetting ? 'fa-sync fa-spin' : 'fa-arrow-right'"
-          ></i>
+        <div class="Action-Item Action-Item-List" v-on:click="getArchiveVideos">
+          <i class="fas fa-lg" :class="isArchiveGetting ? 'fa-sync fa-spin' : 'fa-arrow-right'"></i>
         </div>
       </div>
     </div>
