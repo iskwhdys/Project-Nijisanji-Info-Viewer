@@ -92,10 +92,11 @@ v-card-text {
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Mixins} from "vue-property-decorator";
 import moment from "moment";
 import Video from "@/types/video.ts";
 import Channel from "@/types/channel.ts";
+import GrobalValiables from '@/mixins/grobalValiables';
 
 @Component({
   components: {
@@ -139,9 +140,8 @@ import Channel from "@/types/channel.ts";
     }
   }
 })
-export default class VideoCard extends Vue {
+export default class VideoCard extends Mixins(GrobalValiables) {
   @Prop() private video!: Video;
-  @Prop() private apiUrl!: Video;
-  @Prop() private type!: Video;
+  @Prop() private type!: String;
 }
 </script>

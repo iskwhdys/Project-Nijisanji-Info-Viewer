@@ -21,7 +21,8 @@
           <v-list-item-title class="grey--text text--darken-1">
             ナイトモード
           </v-list-item-title>
-            <v-switch v-model="$vuetify.theme.dark" primary @click="$vuetify.theme.dark = !$vuetify.theme.dark"> </v-switch>
+          <v-switch v-model="$vuetify.theme.dark" primary @click="$vuetify.theme.dark = !$vuetify.theme.dark">
+          </v-switch>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -51,10 +52,7 @@ export default {
     drawer: null,
     items: [
       { icon: "mdi-home", text: "ホーム", to: "/" },
-      // { icon: "mdi-access-point", text: "ライブ中" },
-      // { icon: "mdi-youtube-tv", text: "新着動画" },
-      // { icon: "mdi-library-video", text: "アーカイブ" },
-      { icon: "mdi-timetable", text: "ライブ予定" },
+      { icon: "mdi-timetable", text: "配信予定", to: "/schedules" },
       { icon: "mdi-account-group", text: "ライバー", to: "/broadcasters" }
     ],
     items2: [
