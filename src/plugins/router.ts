@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import Ranking from '../views/Ranking.vue'
-import Manager from '../views/Manager.vue'
+import Broadcasters from '../views/Broadcasters.vue'
 
 Vue.use(VueRouter)
 
@@ -13,14 +12,9 @@ const routes = [
     component: Home
   },
   {
-    path: '/ranking',
-    name: 'ranking',
-    component: Ranking
-  },
-  {
-    path: '/manager',
-    name: 'manager',
-    component: Manager
+    path: '/broadcasters',
+    name: 'broadcasters',
+    component: Broadcasters
   },
   
 ]
