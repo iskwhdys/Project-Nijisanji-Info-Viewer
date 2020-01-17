@@ -75,7 +75,7 @@ v-card-text {
         </v-card-title>
         <v-card-text style="padding:8px;">
           <div>
-            <div class="info-text">{{ video.liveStart | toFormatDate }}</div>
+            <div class="info-text">{{ video.liveStart == null ? video.uploadDate : video.liveStart | toFormatDate }}</div>
             <span class="info-text">
               <span v-if="type == 'live'">👤{{ video.liveViews }}</span>
               <span v-else>▶{{ video.views }}</span>
