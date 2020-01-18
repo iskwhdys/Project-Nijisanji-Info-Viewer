@@ -85,8 +85,8 @@ v-card-text {
         </v-card-text>
       </div>
     </div>
-    <a :href="'https://www.youtube.com/channel/' + video.channelId" :title="video.channel.title">
-      <v-img class="Card-Channel-Icon" :src="video.channel.thumbnail" />
+    <a :href="'https://www.youtube.com/channel/' + video.channelId" :title="video.channelTitle">
+      <v-img class="Card-Channel-Icon" :src="apiUrl + 'channel/' + this.video.channelId + '/thumbnail_mini'"/>
     </a>
   </v-card>
 </template>

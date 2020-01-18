@@ -55,14 +55,12 @@ export default class CommonCardList extends Mixins(GrobalValiables) {
   async reloadVideos(feald: any) {
     feald.reload.flag = true;
     feald.videos.splice(0, feald.videos.length);
-    Axios.get(this.apiUrl + "video?type=" + feald.id + "&mode=" + feald.reload.id, {})
-      .then(async response => {
-        const data = await this.downloadChannelThumbnail(response.data);
-        data.forEach(d => feald.videos.push(d));
-      })
-      .finally(() => {
-        feald.reload.flag = false;
-      });
+    const url = this.apiUrl + "video?type=" + feald.id + "&mode=" + feald.reload.id;
+    const data: Video[] = (await Axios.get(url, {})).data;
+    data.forEach(d => {      
+      feald.videos.push(d)
+    });
+    feald.reload.flag = false;
   }
   async getVideos(feald: any) {
     feald.get.flag = true;
@@ -71,28 +69,10 @@ export default class CommonCardList extends Mixins(GrobalValiables) {
     const from = moment(date).format("YYYY-MM-DD HH:mm:ss");
     const url = this.apiUrl + "video";
     const param = "?type=" + feald.id + "&mode=" + feald.get.id + "&from=" + from + "&count=" + feald.get.count;
-    Axios.get(url + param, {})
-      .then(async response => {
-        const data = await this.downloadChannelThumbnail(response.data);
-        data.forEach(d => feald.videos.push(d));
-      })
-      .finally(() => {
-        feald.get.flag = false;
-      });
-  }
 
-  async downloadChannelThumbnail(videos: Video[]) {
-    var channels: Channel[] = [];
-
-    for (const v of videos) {
-      var channel: Channel = channels.find(c => c.id == v.channelId) as Channel;
-      if (channel == null) {
-        channel = (await Axios.get(this.apiUrl + "channel/" + v.channelId + "?MiniThumbnail=0", {})).data;
-        channels.push(channel);
-      }
-      v.channel = channel;
-    }
-    return videos;
+    const videos: Video[] = (await Axios.get(url + param, {})).data;
+    videos.forEach(d => feald.videos.push(d));
+    feald.get.flag = false;
   }
 }
 </script>
