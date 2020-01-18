@@ -18,12 +18,12 @@
 
     <v-row dense>
       <v-col xl="2" justify="start" v-for="video in feald.videos" :key="video.id">
-        <VideoCard :video="video" :type="feald.id"></VideoCard>
+        <VideoCard :video="video" :type="feald.id" :showIcon="true"></VideoCard>
       </v-col>
       <v-col v-if="feald.get" xl="2" justify="start">
-        <v-btn fab small @click="getVideos(feald)">
+        <v-btn fab small @click="getVideos(feald)" :loading="feald.get.flag">
           <v-icon>
-            {{ feald.get.flag ? "mdi-sync mdi-spin" : "mdi-chevron-right" }}
+            mdi-chevron-right
           </v-icon>
         </v-btn>
       </v-col>
@@ -65,10 +65,10 @@ export default class CommonCardList extends Mixins(GrobalValiables) {
   async getVideos(feald: any) {
     feald.get.flag = true;
     const lastVideo = feald.videos[feald.videos.length - 1];
-    const date = feald.id == "upload" ? lastVideo.uploadDate : lastVideo.liveStart;
+    const date = feald.id == "upload" ? lastVideo.uploadDate : feald.id == "live" ? lastVideo.liveStart : lastVideo.liveSchedule;
     const from = moment(date).format("YYYY-MM-DD HH:mm:ss");
     const url = this.apiUrl + "video";
-    const param = "?type=" + feald.id + "&mode=" + feald.get.id + "&from=" + from + "&count=" + feald.get.count;
+    const param = "?type=" + feald.id + "&mode=" + feald.get.id + "&from=" + from;
 
     const videos: Video[] = (await Axios.get(url + param, {})).data;
     videos.forEach(d => feald.videos.push(d));

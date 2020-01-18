@@ -20,7 +20,7 @@ export default class Home extends Vue {
     {
       id: "live",
       title: "ライブ中",
-      icon: "mdi-library-video",
+      icon: "mdi-access-point",
       get: null,
       reload: { id: "new", flag: false },
       videos: []

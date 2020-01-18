@@ -12,6 +12,7 @@ export default interface Video {
   liveStart: Date;
   liveSchedule: Date;
   liveViews: number;
+  type:string;
   channelId: string;
   channelTitle: string;
 }

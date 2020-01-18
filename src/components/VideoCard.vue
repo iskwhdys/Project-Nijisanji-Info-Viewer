@@ -51,16 +51,21 @@ v-card-text {
 <template>
   <v-card :width="$vuetify.breakpoint.xs ? 144 : 176" :href="'https://www.youtube.com/watch?v=' + video.id">
     <div>
-      <v-img 
-      :width="$vuetify.breakpoint.xs ? 144 : 176"
-      :height="$vuetify.breakpoint.xs ? 80 : 98"
-      :src="apiUrl + 'video/' + this.video.id + '/thumbnail_mini'">
+      <v-img
+        :width="$vuetify.breakpoint.xs ? 144 : 176"
+        :height="$vuetify.breakpoint.xs ? 80 : 98"
+        :src="apiUrl + 'video/' + this.video.id + '/thumbnail_mini'"
+      >
         <span v-if="type == 'live'" class="Card-Thumbnail-Time Card-Thumbnail-Total">
           {{ video.liveStart | toLiveTime }}
         </span>
-        <span v-else class="Card-Thumbnail-Time Card-Thumbnail-Duration">
+        <span
+          v-else-if="type == 'upload' || type == 'archive' || type == 'premier'"
+          class="Card-Thumbnail-Time Card-Thumbnail-Duration"
+        >
           {{ video.duration | toTime }}
         </span>
+        <span v-else-if="type == 'schedule'" class="Card-Thumbnail-Time Card-Thumbnail-Duration"> </span>
       </v-img>
 
       <div style="position:relative">
@@ -75,28 +80,35 @@ v-card-text {
         </v-card-title>
         <v-card-text style="padding:8px;">
           <div>
-            <div class="info-text">{{ video.liveStart == null ? video.uploadDate : video.liveStart | toFormatDate }}</div>
+            <div v-if="(type == 'live') | (type == 'archive')" class="info-text">
+              {{ video.liveStart | toFormatDate }}
+            </div>
+            <div v-else-if="type == 'upload'" class="info-text">{{ video.uploadDate | toFormatDate }}</div>
+            <div v-else-if="type == 'premier'" class="info-text">{{ video.liveSchedule | toFormatDateYYYY }} 公開</div>
+            <div v-else-if="type == 'schedule'" class="info-text">{{ video.liveSchedule | toFormatDateYYYY }} 開始</div>
             <span class="info-text">
               <span v-if="type == 'live'">👤{{ video.liveViews }}</span>
+              <span v-else-if="type == 'premier' || type == 'schedule'"></span>
               <span v-else>▶{{ video.views }}</span>
-              <span v-if="video.likes != 0">👍{{ video.likes }}({{ video | getRating }})</span>
+              <span v-if="video.likes != 0">👍{{ video.likes }}</span>
+              <span v-if="video.likes != 0 && !($vuetify.breakpoint.xs && showIcon)">({{ video | getRating }})</span>
             </span>
           </div>
         </v-card-text>
       </div>
     </div>
-    <a :href="'https://www.youtube.com/channel/' + video.channelId" :title="video.channelTitle">
-      <v-img class="Card-Channel-Icon" :src="apiUrl + 'channel/' + this.video.channelId + '/thumbnail_mini'"/>
+    <a v-if="showIcon" :href="'https://www.youtube.com/channel/' + video.channelId" :title="video.channelTitle">
+      <v-img class="Card-Channel-Icon" :src="apiUrl + 'channel/' + this.video.channelId + '/thumbnail_mini'" />
     </a>
   </v-card>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Mixins} from "vue-property-decorator";
+import { Component, Prop, Vue, Mixins } from "vue-property-decorator";
 import moment from "moment";
 import Video from "@/types/video.ts";
 import Channel from "@/types/channel.ts";
-import GrobalValiables from '@/mixins/grobalValiables';
+import GrobalValiables from "@/mixins/grobalValiables";
 
 @Component({
   components: {
@@ -114,6 +126,9 @@ import GrobalValiables from '@/mixins/grobalValiables';
     },
     toFormatDate: function(date: Date) {
       return moment(date).format("M/DD HH:mm");
+    },
+    toFormatDateYYYY: function(date: Date) {
+      return moment(date).format("YYYY/MM/DD HH:mm");
     },
     toTime: function(totalSec: number) {
       const hour = Math.floor(Math.floor(totalSec / 60) / 60);
@@ -143,5 +158,6 @@ import GrobalValiables from '@/mixins/grobalValiables';
 export default class VideoCard extends Mixins(GrobalValiables) {
   @Prop() private video!: Video;
   @Prop() private type!: String;
+  @Prop() private showIcon!: Boolean;
 }
 </script>

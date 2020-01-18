@@ -1,5 +1,17 @@
 <template>
   <v-app id="inspire">
+    
+    <!--  <v-app-bar app clipped-left color="#2A4871" dense hide-on-scroll>-->
+    <v-app-bar app clipped-left dense>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-icon class="mx-4"></v-icon>
+      <v-toolbar-title class="mr-12 align-center">
+        <span class="title">にじさんじ配信まとめ</span>
+      </v-toolbar-title>
+      <v-spacer />
+    </v-app-bar>
+
+
     <v-navigation-drawer v-model="drawer" app clipped>
       <v-list dense>
         <v-list-item v-for="item in items" :key="item.text" link :to="item.to">
@@ -26,16 +38,6 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-
-    <!--  <v-app-bar app clipped-left color="#2A4871" dense hide-on-scroll>-->
-    <v-app-bar app clipped-left dense hide-on-scroll>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-icon class="mx-4"></v-icon>
-      <v-toolbar-title class="mr-12 align-center">
-        <span class="title">にじさんじ配信まとめ</span>
-      </v-toolbar-title>
-      <v-spacer />
-    </v-app-bar>
 
     <v-content>
       <router-view></router-view>
