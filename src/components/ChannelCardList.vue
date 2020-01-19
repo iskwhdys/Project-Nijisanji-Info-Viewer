@@ -1,12 +1,10 @@
 <template>
   <div>
-    <v-card width="1185px" class="">
-      <v-list-item  @click.stop="showVideoSlide()">
-        <a @click.stop="" :href="'https://www.youtube.com/channel/' + channel.id">
-          <v-list-item-avatar color="grey">
-            <v-img :src="apiUrl + 'channel/' + channel.id + '/thumbnail'"> </v-img>
-          </v-list-item-avatar>
-        </a>
+    <v-card class="">
+      <v-list-item @click.stop="showVideoSlide()">
+        <v-list-item-avatar width="64px" height="64px" color="grey">
+          <v-img :src="apiUrl + 'channel/' + channel.id + '/thumbnail'"> </v-img>
+        </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>
             {{ channel.title }}
@@ -18,9 +16,9 @@
             {{ channel.subscriberCount | toSubscribeText }}
           </v-list-item-subtitle>
         </v-list-item-content>
-          <v-icon>
-            {{ videos.length == 0 ? "mdi-chevron-down-circle-outline" : "mdi-chevron-up-circle-outline" }}
-          </v-icon>
+        <v-icon>
+          {{ videos.length == 0 ? "mdi-chevron-down-circle-outline" : "mdi-chevron-up-circle-outline" }}
+        </v-icon>
       </v-list-item>
     </v-card>
 
@@ -58,9 +56,15 @@ import GrobalValiables from "@/mixins/grobalValiables";
 })
 export default class ChannelCardList extends Mixins(GrobalValiables) {
   @Prop() private channel!: Channel;
+  @Prop() private open!: Boolean;
+
   videos: Video[] = [];
 
-  async created() {}
+  async created() {
+    if (this.open) {
+      this.setVideoData();
+    }
+  }
 
   getType(video: Video) {
     switch (video.type) {
@@ -83,26 +87,31 @@ export default class ChannelCardList extends Mixins(GrobalValiables) {
 
   async showVideoSlide() {
     if (this.videos.length == 0) {
-      const url = this.apiUrl + "video?type=channel_video&channel_id=" + this.channel.id;
-      const data: Video[] = (await Axios.get(url, {})).data;
-
-      // 予定を抽出
-      data.forEach(d => {
-        if (d.type == "PremierReserve" || d.type == "LiveReserve") this.videos.push(d);
-      });
-      // ライブを抽出
-      data.forEach(d => {
-        if (d.type == "PremierLive" || d.type == "LiveLive") this.videos.push(d);
-      });
-      // 上記以外を抽出
-      data.forEach(d => {
-        if (d.type != "PremierReserve" && d.type != "LiveReserve" && d.type != "PremierLive" && d.type != "LiveLive") {
-          this.videos.push(d);
-        }
-      });
+      this.setVideoData();
     } else {
       this.videos.splice(0);
     }
+  }
+
+  async setVideoData() {
+    this.videos.splice(0);
+    const url = this.apiUrl + "video?type=channel_video&channel_id=" + this.channel.id;
+    const data: Video[] = (await Axios.get(url, {})).data;
+
+    // 予定を抽出
+    data.forEach(d => {
+      if (d.type == "PremierReserve" || d.type == "LiveReserve") this.videos.push(d);
+    });
+    // ライブを抽出
+    data.forEach(d => {
+      if (d.type == "PremierLive" || d.type == "LiveLive") this.videos.push(d);
+    });
+    // 上記以外を抽出
+    data.forEach(d => {
+      if (d.type != "PremierReserve" && d.type != "LiveReserve" && d.type != "PremierLive" && d.type != "LiveLive") {
+        this.videos.push(d);
+      }
+    });
   }
 }
 </script>

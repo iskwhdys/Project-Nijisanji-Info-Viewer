@@ -1,6 +1,5 @@
 <template>
   <v-app id="inspire">
-    
     <!--  <v-app-bar app clipped-left color="#2A4871" dense hide-on-scroll>-->
     <v-app-bar app clipped-left dense>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
@@ -10,7 +9,6 @@
       </v-toolbar-title>
       <v-spacer />
     </v-app-bar>
-
 
     <v-navigation-drawer v-model="drawer" app clipped>
       <v-list dense>
@@ -26,15 +24,14 @@
         </v-list-item>
 
         <v-subheader class="mt-4 grey--text text--darken-1">設定</v-subheader>
-        <v-list-item link @click="$vuetify.theme.dark = !$vuetify.theme.dark">
+        <v-list-item link @click.stop="clickChangeTheme()">
           <v-list-item-action>
             <v-icon color="grey darken-1">mdi-theme-light-dark </v-icon>
           </v-list-item-action>
           <v-list-item-title class="grey--text text--darken-1">
             ナイトモード
           </v-list-item-title>
-          <v-switch v-model="$vuetify.theme.dark" primary @click="$vuetify.theme.dark = !$vuetify.theme.dark">
-          </v-switch>
+          <v-switch v-model="$vuetify.theme.dark" primary @click.stop="clickChangeTheme()"> </v-switch>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -56,17 +53,19 @@ export default {
       { icon: "mdi-home", text: "ホーム", to: "/" },
       { icon: "mdi-timetable", text: "配信予定", to: "/schedules" },
       { icon: "mdi-account-group", text: "ライバー", to: "/broadcasters" }
-    ],
-    items2: [
-      { picture: 28, text: "Joseph" },
-      { picture: 38, text: "Apple" },
-      { picture: 48, text: "Xbox Ahoy" },
-      { picture: 58, text: "Nokia" },
-      { picture: 78, text: "MKBHD" }
     ]
   }),
+  methods: {
+    clickChangeTheme() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      localStorage.setItem("DarkTheme", this.$vuetify.theme.dark ? "True" : "False");
+    }
+  },
   created() {
-    this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+    if (localStorage.getItem("DarkTheme") == null) {
+      localStorage.setItem("DarkTheme", "True");
+    }
+    this.$vuetify.theme.dark = localStorage.getItem("DarkTheme") == "True";
   }
 };
 </script>

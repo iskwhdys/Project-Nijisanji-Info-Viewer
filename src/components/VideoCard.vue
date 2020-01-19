@@ -17,7 +17,15 @@ v-card-text {
 }
 .Card-Channel-Icon {
   position: absolute;
-  right: 5px;
+  left: 140px;
+  bottom: 5px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+.Card-Channel-Icon-XS {
+  position: absolute;
+  left: 108px;
   bottom: 5px;
   width: 30px;
   height: 30px;
@@ -30,7 +38,7 @@ v-card-text {
   padding: 0px 4px;
   margin: 0px 0px 0px 0px;
   background: #fff;
-  border-radius: 10px; /*角の丸み*/
+  border-radius: 10px;
   font-size: 12px;
 }
 .Card-Thumbnail-Duration {
@@ -49,58 +57,67 @@ v-card-text {
 </style>
 
 <template>
-  <v-card :width="$vuetify.breakpoint.xs ? 144 : 176" :href="'https://www.youtube.com/watch?v=' + video.id">
-    <div>
-      <v-img
-        :width="$vuetify.breakpoint.xs ? 144 : 176"
-        :height="$vuetify.breakpoint.xs ? 80 : 98"
-        :src="apiUrl + 'video/' + this.video.id + '/thumbnail_mini'"
-      >
-        <span v-if="type == 'live'" class="Card-Thumbnail-Time Card-Thumbnail-Total">
-          {{ video.liveStart | toLiveTime }}
-        </span>
-        <span
-          v-else-if="type == 'upload' || type == 'archive' || type == 'premier'"
-          class="Card-Thumbnail-Time Card-Thumbnail-Duration"
+  <div style="position:relative">
+    <v-card :width="$vuetify.breakpoint.xs ? 144 : 176" :href="'https://www.youtube.com/watch?v=' + video.id">
+      <div>
+        <v-img
+          :width="$vuetify.breakpoint.xs ? 144 : 176"
+          :height="$vuetify.breakpoint.xs ? 80 : 98"
+          :src="apiUrl + 'video/' + this.video.id + '/thumbnail_mini'"
         >
-          {{ video.duration | toTime }}
-        </span>
-        <span v-else-if="type == 'schedule'" class="Card-Thumbnail-Time Card-Thumbnail-Duration"> </span>
-      </v-img>
+          <span v-if="type == 'live'" class="Card-Thumbnail-Time Card-Thumbnail-Total">
+            {{ video.liveStart | toLiveTime }}
+          </span>
+          <span
+            v-else-if="type == 'upload' || type == 'archive' || type == 'premier'"
+            class="Card-Thumbnail-Time Card-Thumbnail-Duration"
+          >
+            {{ video.duration | toTime }}
+          </span>
+          <span v-else-if="type == 'schedule'" class="Card-Thumbnail-Time Card-Thumbnail-Duration"> </span>
+        </v-img>
 
-      <div style="position:relative">
-        <div
-          class="Card-Buttom-Frame"
-          :style="type == 'live' ? video.liveViews / 1000 : (video.views / 20000) | getFrameStyle"
-        ></div>
-        <v-card-title style="padding:8px; height:60px">
-          <div class="title-text">
-            {{ video.title }}
-          </div>
-        </v-card-title>
-        <v-card-text style="padding:8px;">
-          <div>
-            <div v-if="(type == 'live') | (type == 'archive')" class="info-text">
-              {{ video.liveStart | toFormatDate }}
+        <div style="position:relative">
+          <div
+            class="Card-Buttom-Frame"
+            :style="type == 'live' ? video.liveViews / 1000 : (video.views / 20000) | getFrameStyle"
+          ></div>
+          <v-card-title style="padding:8px; height:60px">
+            <div class="title-text">
+              {{ video.title }}
             </div>
-            <div v-else-if="type == 'upload'" class="info-text">{{ video.uploadDate | toFormatDate }}</div>
-            <div v-else-if="type == 'premier'" class="info-text">{{ video.liveSchedule | toFormatDateYYYY }} 公開</div>
-            <div v-else-if="type == 'schedule'" class="info-text">{{ video.liveSchedule | toFormatDateYYYY }} 開始</div>
-            <span class="info-text">
-              <span v-if="type == 'live'">👤{{ video.liveViews }}</span>
-              <span v-else-if="type == 'premier' || type == 'schedule'"></span>
-              <span v-else>▶{{ video.views }}</span>
-              <span v-if="video.likes != 0">👍{{ video.likes }}</span>
-              <span v-if="video.likes != 0 && !($vuetify.breakpoint.xs && showIcon)">({{ video | getRating }})</span>
-            </span>
-          </div>
-        </v-card-text>
+          </v-card-title>
+          <v-card-text style="padding:8px;">
+            <div>
+              <div v-if="(type == 'live') | (type == 'archive')" class="info-text">
+                {{ video.liveStart | toFormatDate }}
+              </div>
+              <div v-else-if="type == 'upload'" class="info-text">{{ video.uploadDate | toFormatDate }}</div>
+              <div v-else-if="type == 'premier'" class="info-text">
+                {{ video.liveSchedule | toFormatDateYYYY }} 公開
+              </div>
+              <div v-else-if="type == 'schedule'" class="info-text">
+                {{ video.liveSchedule | toFormatDateYYYY }} 開始
+              </div>
+              <span class="info-text">
+                <span v-if="type == 'live'">👤{{ video.liveViews }}</span>
+                <span v-else-if="type == 'premier' || type == 'schedule'"></span>
+                <span v-else>▶{{ video.views }}</span>
+                <span v-if="video.likes != 0">👍{{ video.likes }}</span>
+                <span v-if="video.likes != 0 && !($vuetify.breakpoint.xs && showIcon)">({{ video | getRating }})</span>
+              </span>
+            </div>
+          </v-card-text>
+        </div>
       </div>
+    </v-card>
+    <div v-if="showIcon" @click.stop="showChannelCardList()">
+      <v-img
+        :class="$vuetify.breakpoint.xs ? 'Card-Channel-Icon-XS' : 'Card-Channel-Icon'"
+        :src="apiUrl + 'channel/' + this.video.channelId + '/thumbnail_mini'"
+      />
     </div>
-    <a v-if="showIcon" :href="'https://www.youtube.com/channel/' + video.channelId" :title="video.channelTitle">
-      <v-img class="Card-Channel-Icon" :src="apiUrl + 'channel/' + this.video.channelId + '/thumbnail_mini'" />
-    </a>
-  </v-card>
+  </div>
 </template>
 
 <script lang="ts">
@@ -159,5 +176,9 @@ export default class VideoCard extends Mixins(GrobalValiables) {
   @Prop() private video!: Video;
   @Prop() private type!: String;
   @Prop() private showIcon!: Boolean;
+  
+  async showChannelCardList() {
+    this.$emit("child-event");
+  }
 }
 </script>
