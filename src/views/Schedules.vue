@@ -20,7 +20,7 @@ export default class Schedules extends Vue {
     {
       id: "premier",
       title: "プレミア公開前",
-      icon: "mdi-timetable",
+      icon: { name: "mdi-timetable" },
       get: { id: "get", flag: false, count: 30 },
       reload: { id: "new", flag: false },
       videos: []
@@ -28,7 +28,7 @@ export default class Schedules extends Vue {
     {
       id: "schedule",
       title: "配信予定",
-      icon: "mdi-timetable",
+      icon: { name: "mdi-timetable" },
       get: { id: "get", flag: false, count: 30 },
       reload: { id: "new", flag: false },
       videos: []

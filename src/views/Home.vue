@@ -20,7 +20,10 @@ export default class Home extends Vue {
     {
       id: "live",
       title: "ライブ中",
-      icon: "mdi-access-point",
+      icon: {
+        name: "mdi-access-point",
+        color: "red"
+      },
       get: null,
       reload: { id: "new", flag: false },
       videos: []
@@ -28,7 +31,7 @@ export default class Home extends Vue {
     {
       id: "upload",
       title: "新着動画",
-      icon: "mdi-youtube-tv",
+      icon: { name: "mdi-youtube-tv" },
       get: { id: "get", flag: false, count: 10 },
       reload: { id: "new", flag: false },
       videos: []
@@ -36,7 +39,7 @@ export default class Home extends Vue {
     {
       id: "archive",
       title: "アーカイブ",
-      icon: "mdi-library-video",
+      icon: { name: "mdi-library-video" },
       get: { id: "get", flag: false, count: 30 },
       reload: { id: "new", flag: false },
       videos: []

@@ -4,11 +4,11 @@
       <v-col>
         <v-divider></v-divider>
         <h3>
-          <v-icon>{{ feald.icon }}</v-icon>
+          <v-icon :color="feald.icon.color">{{ feald.icon.name }}</v-icon>
           {{ feald.title }}
-          <v-btn fab small @click="reloadVideos(feald)">
+          <v-btn fab small @click="reloadVideos(feald)" :loading="feald.reload.flag">
             <v-icon>
-              {{ feald.reload.flag ? "mdi-sync mdi-spin" : "mdi-rotate-left" }}
+              mdi-rotate-left
             </v-icon>
           </v-btn>
         </h3>
@@ -21,14 +21,16 @@
         <VideoCard v-on:child-event="showChannelPanel(video)" :video="video" :type="feald.id" :showIcon="true" />
       </v-col>
 
-      <v-col v-if="feald.get" xl="2" justify="start">
-        <v-btn fab small @click="getVideos(feald)" :loading="feald.get.flag">
+      <v-col v-if="feald.get" cols="12" align-items="center">
+
+        <v-btn block @click="getVideos(feald)" :loading="feald.get.flag">
           <v-icon>
-            mdi-chevron-right
+            mdi-chevron-down-circle-outline
           </v-icon>
         </v-btn>
       </v-col>
     </v-row>
+
     <v-bottom-sheet v-model="showChannelCardList" inset>
       <ChannelCardList v-if="showChannelCardList" :channel="channel" :open="true" />
     </v-bottom-sheet>
