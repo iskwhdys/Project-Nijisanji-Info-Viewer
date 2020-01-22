@@ -5,20 +5,20 @@
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-icon class="mx-4"></v-icon>
       <v-toolbar-title class="mr-12 align-center">
-        <span class="title">にじさんじ配信まとめ</span>
+        <span class="title">にじさんじライブ新着</span>
       </v-toolbar-title>
       <v-spacer />
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" app clipped>
       <v-list dense>
-        <v-list-item v-for="item in items" :key="item.text" link :to="item.to">
+        <v-list-item v-for="page in pages" :key="page.text" link :to="page.to">
           <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
+            <v-icon>{{ page.icon }}</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title>
-              {{ item.text }}
+              {{ page.text }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -32,6 +32,21 @@
             ナイトモード
           </v-list-item-title>
           <v-switch v-model="$vuetify.theme.dark" primary @click.stop="clickChangeTheme()"> </v-switch>
+        </v-list-item>
+
+        <v-subheader class="mt-4 grey--text text--darken-1">にじさんじライブ新着</v-subheader>
+        <!-- <v-list-item link to="/about">
+          <v-list-item-title class="grey--text text--darken-1">このサイトについて</v-list-item-title>
+        </v-list-item> -->
+        <v-list-item href="https://twitter.com/NJSNJ_LIV_COM">
+          <v-list-item-title class="grey--text text--darken-1">お問い合わせ(Twitter)</v-list-item-title>
+        </v-list-item>
+
+        <v-subheader class="mt-4 grey--text text--darken-1">外部リンク</v-subheader>
+        <v-list-item v-for="page in links" :key="page.text" :href="page.to">
+          <v-list-item-title class="grey--text text--darken-1">
+            {{ page.text }}
+          </v-list-item-title>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
@@ -49,10 +64,14 @@ export default {
   },
   data: () => ({
     drawer: null,
-    items: [
+    pages: [
       { icon: "mdi-home", text: "ホーム", to: "/" },
       { icon: "mdi-timetable", text: "配信予定", to: "/schedules" },
       { icon: "mdi-account-group", text: "ライバー", to: "/broadcasters" }
+    ],
+    links: [
+      { text: "にじさんじ公式", to: "http://nijisanji.ichikara.co.jp/" },
+      { text: "にじさんじ非公式wiki", to: "https://wikiwiki.jp/nijisanji/" }
     ]
   }),
   methods: {
