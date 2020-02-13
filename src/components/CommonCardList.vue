@@ -75,7 +75,7 @@ export default class CommonCardList extends Mixins(GrobalValiables) {
   async reloadVideos(feald: any) {
     feald.reload.flag = true;
     feald.videos.splice(0, feald.videos.length);
-    const url = this.apiUrl + "video?type=" + feald.id + "&mode=" + feald.reload.id;
+    const url = this.apiUrl + "video/" + feald.id + "?mode=" + feald.reload.id;
     const data: Video[] = (await Axios.get(url, {})).data;
     data.forEach(d => {
       feald.videos.push(d);
@@ -88,8 +88,8 @@ export default class CommonCardList extends Mixins(GrobalValiables) {
     const date =
       feald.id == "upload" ? lastVideo.uploadDate : feald.id == "live" ? lastVideo.liveStart : lastVideo.liveSchedule;
     const from = moment(date).format("YYYY-MM-DD HH:mm:ss");
-    const url = this.apiUrl + "video";
-    const param = "?type=" + feald.id + "&mode=" + feald.get.id + "&from=" + from;
+    const url = this.apiUrl + "video/" + feald.id;
+    const param = "?mode=" + feald.get.id + "&from=" + from;
 
     const videos: Video[] = (await Axios.get(url + param, {})).data;
     videos.forEach(d => feald.videos.push(d));

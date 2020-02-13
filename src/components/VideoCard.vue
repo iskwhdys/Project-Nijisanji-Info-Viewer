@@ -63,7 +63,7 @@ v-card-text {
         <v-img
           :width="$vuetify.breakpoint.xs ? 144 : 176"
           :height="$vuetify.breakpoint.xs ? 80 : 98"
-          :src="apiUrl + 'video/' + this.video.id + '/thumbnail_mini'"
+          :src="apiUrl + '/image/video/' + this.video.id + '/thumbnail_mini'"
         >
           <span v-if="type == 'live'" class="Card-Thumbnail-Time Card-Thumbnail-Total">
             {{ video.liveStart | toLiveTime }}
@@ -114,7 +114,7 @@ v-card-text {
     <div v-if="showIcon" @click.stop="showChannelCardList()">
       <v-img
         :class="$vuetify.breakpoint.xs ? 'Card-Channel-Icon-XS' : 'Card-Channel-Icon'"
-        :src="apiUrl + 'channel/' + this.video.channelId + '/thumbnail_mini'"
+        :src="apiUrl + 'image/channel/' + this.video.channelId + '/thumbnail_mini'"
       />
     </div>
   </div>
