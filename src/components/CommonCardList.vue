@@ -86,7 +86,7 @@ export default class CommonCardList extends Mixins(GrobalValiables) {
     feald.get.flag = true;
     const lastVideo = feald.videos[feald.videos.length - 1];
     const date =
-      feald.id == "upload" ? lastVideo.uploadDate : feald.id == "live" ? lastVideo.liveStart : lastVideo.liveSchedule;
+      feald.id == "upload" ? lastVideo.uploadDate : (feald.id == "live" || feald.id == "archive") ? lastVideo.liveStart : lastVideo.liveSchedule;
     const from = moment(date).format("YYYY-MM-DD HH:mm:ss");
     const url = this.apiUrl + "video/" + feald.id;
     const param = "?mode=" + feald.get.id + "&from=" + from;
