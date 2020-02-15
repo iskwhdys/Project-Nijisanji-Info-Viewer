@@ -38,7 +38,7 @@
         <!-- <v-list-item link to="/about">
           <v-list-item-title class="grey--text text--darken-1">このサイトについて</v-list-item-title>
         </v-list-item> -->
-        <v-list-item href="https://twitter.com/NJSNJ_LIV_COM">
+        <v-list-item href="https://twitter.com/2j3j_live_com">
           <v-list-item-title class="grey--text text--darken-1">お問い合わせ(Twitter)</v-list-item-title>
         </v-list-item>
 
