@@ -58,7 +58,7 @@ v-card-text {
 
 <template>
   <div style="position:relative">
-    <v-card :width="$vuetify.breakpoint.xs ? 144 : 176" :href="'https://www.youtube.com/watch?v=' + video.id">
+    <v-card :width="$vuetify.breakpoint.xs ? 144 : 176" :href="'https://www.youtube.com/watch?v=' + video.id" >
       <div>
         <v-img
           :width="$vuetify.breakpoint.xs ? 144 : 176"
@@ -123,7 +123,7 @@ v-card-text {
 <script lang="ts">
 import { Component, Prop, Vue, Mixins } from "vue-property-decorator";
 import moment from "moment";
-import Video from "@/types/video.ts";
+import {Video, rank} from "@/types/video.ts";
 import Channel from "@/types/channel.ts";
 import GrobalValiables from "@/mixins/grobalValiables";
 

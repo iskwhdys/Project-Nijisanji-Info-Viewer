@@ -26,7 +26,7 @@ export default class Home extends Vue {
       },
       get: null,
       reload: { id: "new", flag: false },
-      videos: []
+      videos: [],
     },
     {
       id: "upload",
@@ -34,7 +34,7 @@ export default class Home extends Vue {
       icon: { name: "mdi-youtube-tv" },
       get: { id: "get", flag: false, count: 10 },
       reload: { id: "new", flag: false },
-      videos: []
+      videos: [],
     },
     {
       id: "archive",
@@ -42,7 +42,7 @@ export default class Home extends Vue {
       icon: { name: "mdi-library-video" },
       get: { id: "get", flag: false, count: 30 },
       reload: { id: "new", flag: false },
-      videos: []
+      videos: [],
     }
   ];
 }

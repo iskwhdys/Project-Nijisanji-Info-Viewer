@@ -37,7 +37,7 @@ import { Component, Vue, Prop, Mixins } from "vue-property-decorator";
 import Axios from "axios";
 import moment from "moment";
 import VideoCard from "@/components/VideoCard.vue";
-import Video from "@/types/video.ts";
+import {Video} from "@/types/video.ts";
 import Channel from "@/types/channel.ts";
 import GrobalValiables from "@/mixins/grobalValiables";
 

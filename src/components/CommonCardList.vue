@@ -4,25 +4,46 @@
       <v-col>
         <v-divider></v-divider>
         <h3>
-          <v-icon :color="feald.icon.color">{{ feald.icon.name }}</v-icon>
-          {{ feald.title }}
-          <v-btn fab small @click="reloadVideos(feald)" :loading="feald.reload.flag">
-            <v-icon>
-              mdi-rotate-left
-            </v-icon>
-          </v-btn>
+          <v-container class="ma-0 py-0">
+            <v-row>
+              <v-col class="px-0 py-1 d-flex align-center">
+                <v-icon :color="feald.icon.color">{{ feald.icon.name }}</v-icon>
+                {{ feald.title }}
+                <v-btn fab x-small @click="reloadVideos(feald)" :loading="feald.reload.flag">
+                  <v-icon>
+                    mdi-rotate-left
+                  </v-icon>
+                </v-btn>
+              </v-col>
+
+              <v-col class="py-1">
+                <v-btn
+                  fab
+                  x-small
+                  v-for="filter in filters"
+                  :key="filter.key"
+                  :color="filter.color"
+                  @click="
+                    filter.value = !filter.value;
+                    filterChange(feald.videos);
+                  "
+                >
+                  <v-icon v-if="filter.value">mdi-check-bold</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
         </h3>
         <v-divider></v-divider>
       </v-col>
     </v-row>
 
     <v-row dense justify="start">
-      <v-col xl="2" v-for="video in feald.videos" :key="video.id">
+      <v-col xl="2" v-for="video in filterVideos" :key="video.id">
         <VideoCard v-on:child-event="showChannelPanel(video)" :video="video" :type="feald.id" :showIcon="true" />
       </v-col>
 
       <v-col v-if="feald.get" cols="12" align-items="center">
-
         <v-btn block @click="getVideos(feald)" :loading="feald.get.flag">
           <v-icon>
             mdi-chevron-down-circle-outline
@@ -42,7 +63,7 @@ import { Component, Vue, Prop, Mixins } from "vue-property-decorator";
 import Axios from "axios";
 import moment from "moment";
 import VideoCard from "@/components/VideoCard.vue";
-import Video from "@/types/video.ts";
+import { Video, VideoCommon, rank } from "@/types/video.ts";
 import Channel from "@/types/channel.ts";
 import GrobalValiables from "@/mixins/grobalValiables";
 import ChannelCardList from "@/components/ChannelCardList.vue";
@@ -59,6 +80,13 @@ export default class CommonCardList extends Mixins(GrobalValiables) {
 
   showChannelCardList: Boolean = false;
   channel!: Channel;
+
+  filters = [
+    { key: rank.none, value: true, color: "" },
+    { key: rank.low, value: true, color: "#4dc1f0" },
+    { key: rank.middle, value: true, color: "#ef7a03" },
+    { key: rank.high, value: true, color: "#db082d" }
+  ];
 
   async created() {
     this.reloadVideos(this.feald);
@@ -78,22 +106,44 @@ export default class CommonCardList extends Mixins(GrobalValiables) {
     const url = this.apiUrl + "video/" + feald.id + "?mode=" + feald.reload.id;
     const data: Video[] = (await Axios.get(url, {})).data;
     data.forEach(d => {
+      VideoCommon.setVideoRank(feald.id, d);
       feald.videos.push(d);
     });
+    this.filterChange(feald.videos);
     feald.reload.flag = false;
   }
   async getVideos(feald: any) {
     feald.get.flag = true;
     const lastVideo = feald.videos[feald.videos.length - 1];
     const date =
-      feald.id == "upload" ? lastVideo.uploadDate : (feald.id == "live" || feald.id == "archive") ? lastVideo.liveStart : lastVideo.liveSchedule;
+      feald.id == "upload"
+        ? lastVideo.uploadDate
+        : feald.id == "live" || feald.id == "archive"
+        ? lastVideo.liveStart
+        : lastVideo.liveSchedule;
     const from = moment(date).format("YYYY-MM-DD HH:mm:ss");
     const url = this.apiUrl + "video/" + feald.id;
     const param = "?mode=" + feald.get.id + "&from=" + from;
 
     const videos: Video[] = (await Axios.get(url + param, {})).data;
-    videos.forEach(d => feald.videos.push(d));
+    videos.forEach(d => {
+      VideoCommon.setVideoRank(feald.id, d);
+      feald.videos.push(d);
+    });
+    this.filterChange(feald.videos);
+
     feald.get.flag = false;
+  }
+
+  filterVideos: Video[] = [];
+
+  filterChange(videos: Video[]) {
+    this.filterVideos.splice(0, this.filterVideos.length);
+    videos.forEach(d => {
+      if (this.filters[d.rank].value) {
+        this.filterVideos.push(d);
+      }
+    });
   }
 }
 </script>
