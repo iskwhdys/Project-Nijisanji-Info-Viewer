@@ -58,7 +58,7 @@ v-card-text {
 
 <template>
   <div style="position:relative">
-    <v-card :width="$vuetify.breakpoint.xs ? 144 : 176" :href="'https://www.youtube.com/watch?v=' + video.id" >
+    <v-card :width="$vuetify.breakpoint.xs ? 144 : 176" :href="'https://www.youtube.com/watch?v=' + video.id">
       <div>
         <v-img
           :width="$vuetify.breakpoint.xs ? 144 : 176"
@@ -78,10 +78,7 @@ v-card-text {
         </v-img>
 
         <div style="position:relative">
-          <div
-            class="Card-Buttom-Frame"
-            :style="type == 'live' ? video.liveViews / 1000 : (video.views / 20000) | getFrameStyle"
-          ></div>
+          <div class="Card-Buttom-Frame" :style="getRankColor(video.rank)"></div>
           <v-card-title style="padding:8px; height:60px">
             <div class="title-text">
               {{ video.title }}
@@ -123,7 +120,7 @@ v-card-text {
 <script lang="ts">
 import { Component, Prop, Vue, Mixins } from "vue-property-decorator";
 import moment from "moment";
-import {Video, rank} from "@/types/video.ts";
+import { Video, Rank, VideoCommon } from "@/types/video.ts";
 import Channel from "@/types/channel.ts";
 import GrobalValiables from "@/mixins/grobalValiables";
 
@@ -159,16 +156,6 @@ import GrobalValiables from "@/mixins/grobalValiables";
       const count = video.likes + video.dislikes;
       const rate = sum / count;
       return rate.toFixed(2);
-    },
-    getFrameStyle: function(score: number) {
-      var colNo = Math.floor(score);
-      const header = "border: solid 2px";
-      if (colNo == 1) return header + "#4dc1f0";
-      if (colNo == 2) return header + "#4dc1f0";
-      if (colNo == 3) return header + "#ef7a03";
-      if (colNo == 4) return header + "#ef7a03";
-      if (colNo >= 5) return header + "#db082d";
-      return "";
     }
   }
 })
@@ -176,9 +163,15 @@ export default class VideoCard extends Mixins(GrobalValiables) {
   @Prop() private video!: Video;
   @Prop() private type!: String;
   @Prop() private showIcon!: Boolean;
-  
+
   async showChannelCardList() {
     this.$emit("child-event");
+  }
+
+  getRankColor(rank: Rank) {
+    const color = VideoCommon.getRankColor(rank);
+    if (color == "") return "";
+    return "border: solid 2px" + color;
   }
 }
 </script>

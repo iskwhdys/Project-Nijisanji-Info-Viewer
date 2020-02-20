@@ -16,13 +16,13 @@
                 </v-btn>
               </v-col>
 
-              <v-col class="py-1">
+              <v-col v-if="feald.filter" class="py-1">
                 <v-btn
                   fab
                   x-small
                   v-for="filter in filters"
                   :key="filter.key"
-                  :color="filter.color"
+                  :color="getRankColor(filter.key)"
                   @click="
                     filter.value = !filter.value;
                     filterChange(feald.videos);
@@ -63,7 +63,7 @@ import { Component, Vue, Prop, Mixins } from "vue-property-decorator";
 import Axios from "axios";
 import moment from "moment";
 import VideoCard from "@/components/VideoCard.vue";
-import { Video, VideoCommon, rank } from "@/types/video.ts";
+import { Video, Rank, VideoCommon } from "@/types/video.ts";
 import Channel from "@/types/channel.ts";
 import GrobalValiables from "@/mixins/grobalValiables";
 import ChannelCardList from "@/components/ChannelCardList.vue";
@@ -82,11 +82,15 @@ export default class CommonCardList extends Mixins(GrobalValiables) {
   channel!: Channel;
 
   filters = [
-    { key: rank.none, value: true, color: "" },
-    { key: rank.low, value: true, color: "#4dc1f0" },
-    { key: rank.middle, value: true, color: "#ef7a03" },
-    { key: rank.high, value: true, color: "#db082d" }
+    { value: true, key: Rank.none },
+    { value: true, key: Rank.low },
+    { value: true, key: Rank.middle },
+    { value: true, key: Rank.high }
   ];
+
+  getRankColor(rank: Rank) {
+    return VideoCommon.getRankColor(rank);
+  }
 
   async created() {
     this.reloadVideos(this.feald);
@@ -112,6 +116,7 @@ export default class CommonCardList extends Mixins(GrobalValiables) {
     this.filterChange(feald.videos);
     feald.reload.flag = false;
   }
+
   async getVideos(feald: any) {
     feald.get.flag = true;
     const lastVideo = feald.videos[feald.videos.length - 1];
