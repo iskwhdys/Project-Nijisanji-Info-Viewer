@@ -74,7 +74,6 @@ v-card-text {
           >
             {{ video.duration | toTime }}
           </span>
-          <span v-else-if="type == 'schedule'" class="Card-Thumbnail-Time Card-Thumbnail-Duration"> </span>
         </v-img>
 
         <div style="position:relative">
@@ -111,7 +110,7 @@ v-card-text {
     <div v-if="showIcon" @click.stop="showChannelCardList()">
       <v-img
         :class="$vuetify.breakpoint.xs ? 'Card-Channel-Icon-XS' : 'Card-Channel-Icon'"
-        :src="apiUrl + 'image/channel/' + this.video.channelId + '/thumbnail_mini'"
+        :src="apiUrl + '/image/channel/' + this.video.channelId + '/thumbnail_mini'"
       />
     </div>
   </div>

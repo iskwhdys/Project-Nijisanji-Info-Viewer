@@ -26,7 +26,7 @@ export default class Broadcasters extends Mixins(GrobalValiables) {
   loading: Boolean = true;
 
   async created() {
-    const url = this.apiUrl + "channel";
+    const url = this.apiUrl + "/channel";
     const data: Channel[] = (await Axios.get(url, {})).data;
 
     data.sort((c1, c2) => c2.subscriberCount - c1.subscriberCount);

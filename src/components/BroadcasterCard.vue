@@ -3,7 +3,7 @@
     <v-card class="">
       <v-list-item @click.stop="showVideoSlide()">
         <v-list-item-avatar width="64px" height="64px" color="grey">
-          <v-img :src="apiUrl + 'image/channel/' + channel.id + '/thumbnail'"> </v-img>
+          <v-img :src="apiUrl + '/image/channel/' + channel.id + '/thumbnail'"> </v-img>
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>
@@ -98,7 +98,7 @@ export default class BroadcasterCard extends Mixins(GrobalValiables) {
 
   async setVideoData() {
     this.videos.splice(0);
-    const url = this.apiUrl + "video?type=channel_video&channel_id=" + this.channel.id;
+    const url = this.apiUrl + "/video?type=channel_video&channel_id=" + this.channel.id;
     const data: Video[] = (await Axios.get(url, {})).data;
 
     // 予定を抽出

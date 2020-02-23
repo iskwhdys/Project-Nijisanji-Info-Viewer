@@ -28,13 +28,13 @@ export default class Broadcasters extends Mixins(GrobalValiables) {
   loading: Boolean = true;
 
   async created() {
-    const chnls: Channel[] = (await Axios.get(this.apiUrl + "channel", {})).data;
+    const chnls: Channel[] = (await Axios.get(this.apiUrl + "/channel", {})).data;
     chnls.sort((c1, c2) => c2.subscriberCount - c1.subscriberCount);
     chnls.forEach(d => {
       this.channels.push(d);
     });
 
-    const bros: Broadcaster[] = (await Axios.get(this.apiUrl + "broadcaster", {})).data;
+    const bros: Broadcaster[] = (await Axios.get(this.apiUrl + "/broadcaster", {})).data;
     bros.forEach(d => {
       this.broadcasters.push(d);
     });

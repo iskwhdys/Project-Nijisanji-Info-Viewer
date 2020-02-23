@@ -3,7 +3,7 @@
     <v-card class="">
       <v-list-item @click.stop="showVideoSlide()">
         <v-list-item-avatar width="64px" height="64px" color="grey">
-          <v-img :src="apiUrl + 'image/channel/' + channel.id + '/thumbnail'"> </v-img>
+          <v-img :src="apiUrl + '/image/channel/' + channel.id + '/thumbnail'"> </v-img>
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>
@@ -37,7 +37,7 @@ import { Component, Vue, Prop, Mixins } from "vue-property-decorator";
 import Axios from "axios";
 import moment from "moment";
 import VideoCard from "@/components/VideoCard.vue";
-import {Video} from "@/types/video.ts";
+import { Video, VideoCommon } from "@/types/video.ts";
 import Channel from "@/types/channel.ts";
 import GrobalValiables from "@/mixins/grobalValiables";
 
@@ -82,6 +82,8 @@ export default class ChannelCardList extends Mixins(GrobalValiables) {
         return "live";
       case "LiveArchive":
         return "archive";
+      default:
+        return "";
     }
   }
 
@@ -95,8 +97,10 @@ export default class ChannelCardList extends Mixins(GrobalValiables) {
 
   async setVideoData() {
     this.videos.splice(0);
-    const url = this.apiUrl + "video/channel/" + this.channel.id;
+    const url = this.apiUrl + "/video/channel/" + this.channel.id;
     const data: Video[] = (await Axios.get(url, {})).data;
+
+    data.forEach(d => VideoCommon.setVideoRank(this.getType(d), d));
 
     // 予定を抽出
     data.forEach(d => {
