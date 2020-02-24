@@ -37,10 +37,10 @@ import { Component, Vue, Prop, Mixins } from "vue-property-decorator";
 import Axios from "axios";
 import moment from "moment";
 import VideoCard from "@/components/VideoCard.vue";
-import {Video} from "@/types/video.ts";
-import Channel from "@/types/channel.ts";
+import { Video } from "@/types/video.ts";
+import { Channel } from "@/types/channel.ts";
 import Broadcaster from "@/types/broadcaster.ts";
-import GrobalValiables from "@/mixins/grobalValiables";
+import AppConfig from "@/domain/AppConfig";
 
 @Component({
   components: {
@@ -55,7 +55,7 @@ import GrobalValiables from "@/mixins/grobalValiables";
     }
   }
 })
-export default class BroadcasterCard extends Mixins(GrobalValiables) {
+export default class BroadcasterCard extends Vue {
   @Prop() private broadcaster!: Broadcaster;
   @Prop() private channel!: Channel;
   @Prop() private channel2!: Channel;
@@ -98,7 +98,7 @@ export default class BroadcasterCard extends Mixins(GrobalValiables) {
 
   async setVideoData() {
     this.videos.splice(0);
-    const url = this.apiUrl + "/video?type=channel_video&channel_id=" + this.channel.id;
+    const url = AppConfig.apiUrl + "/video?type=channel_video&channel_id=" + this.channel.id;
     const data: Video[] = (await Axios.get(url, {})).data;
 
     // 予定を抽出

@@ -3,7 +3,7 @@
     <v-card class="">
       <v-list-item @click.stop="showVideoSlide()">
         <v-list-item-avatar width="64px" height="64px" color="grey">
-          <v-img :src="apiUrl + '/image/channel/' + channel.id + '/thumbnail'"> </v-img>
+          <v-img :src="channel.id | channelThumbnailUrl"> </v-img>
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-title>
@@ -25,7 +25,7 @@
     <v-sheet class="" elevation="8">
       <v-slide-group class="" show-arrows>
         <v-slide-item v-for="video in videos" :key="video.id">
-          <VideoCard :video="video" :type="getType(video)"></VideoCard>
+          <VideoCard :video="video"></VideoCard>
         </v-slide-item>
       </v-slide-group>
     </v-sheet>
@@ -35,11 +35,11 @@
 <script lang="ts">
 import { Component, Vue, Prop, Mixins } from "vue-property-decorator";
 import Axios from "axios";
-import moment from "moment";
 import VideoCard from "@/components/VideoCard.vue";
 import { Video, VideoCommon } from "@/types/video.ts";
-import Channel from "@/types/channel.ts";
-import GrobalValiables from "@/mixins/grobalValiables";
+import { Channel } from "@/types/channel.ts";
+import AppConfig from "@/domain/AppConfig";
+import VideoService from "@/domain/VideoService";
 
 @Component({
   components: {
@@ -51,10 +51,13 @@ import GrobalValiables from "@/mixins/grobalValiables";
       if (100000 > count) return (count / 10000).toFixed(2) + "万人";
       if (1000000 > count) return (count / 10000).toFixed(1) + "万人";
       return count + "人";
+    },
+    channelThumbnailUrl: function(id: string) {
+      return `${AppConfig.apiUrl}/image/channel/${id}/thumbnail`;
     }
   }
 })
-export default class ChannelCardList extends Mixins(GrobalValiables) {
+export default class ChannelCardList extends Vue {
   @Prop() private channel!: Channel;
   @Prop() private open!: Boolean;
 
@@ -63,27 +66,6 @@ export default class ChannelCardList extends Mixins(GrobalValiables) {
   async created() {
     if (this.open) {
       this.setVideoData();
-    }
-  }
-
-  getType(video: Video) {
-    switch (video.type) {
-      case "Upload":
-        return "upload";
-      case "PremierReserve":
-        return "premier";
-      case "PremierLive":
-        return "live";
-      case "PremierUpload":
-        return "upload";
-      case "LiveReserve":
-        return "schedule";
-      case "LiveLive":
-        return "live";
-      case "LiveArchive":
-        return "archive";
-      default:
-        return "";
     }
   }
 
@@ -97,25 +79,8 @@ export default class ChannelCardList extends Mixins(GrobalValiables) {
 
   async setVideoData() {
     this.videos.splice(0);
-    const url = this.apiUrl + "/video/channel/" + this.channel.id;
-    const data: Video[] = (await Axios.get(url, {})).data;
 
-    data.forEach(d => VideoCommon.setVideoRank(this.getType(d), d));
-
-    // 予定を抽出
-    data.forEach(d => {
-      if (d.type == "PremierReserve" || d.type == "LiveReserve") this.videos.push(d);
-    });
-    // ライブを抽出
-    data.forEach(d => {
-      if (d.type == "PremierLive" || d.type == "LiveLive") this.videos.push(d);
-    });
-    // 上記以外を抽出
-    data.forEach(d => {
-      if (d.type != "PremierReserve" && d.type != "LiveReserve" && d.type != "PremierLive" && d.type != "LiveLive") {
-        this.videos.push(d);
-      }
-    });
+    (await VideoService.getChannelVideo(this.channel.id)).forEach(v => this.videos.push(v));
   }
 }
 </script>

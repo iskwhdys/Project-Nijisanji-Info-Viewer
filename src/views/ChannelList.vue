@@ -10,26 +10,22 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Mixins } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import ChannelCardList from "@/components/ChannelCardList.vue";
-import Channel from "@/types/channel.ts";
-import GrobalValiables from "@/mixins/grobalValiables";
-import Axios from "axios";
+import { Channel } from "@/types/channel.ts";
+import ChannelService from "@/domain/ChannelService";
 
 @Component({
   components: {
     ChannelCardList
   }
 })
-export default class Broadcasters extends Mixins(GrobalValiables) {
+export default class ChannelList extends Vue {
   channels: Channel[] = [];
   loading: Boolean = true;
 
   async created() {
-    const url = this.apiUrl + "/channel";
-    const data: Channel[] = (await Axios.get(url, {})).data;
-
-    data.sort((c1, c2) => c2.subscriberCount - c1.subscriberCount);
+    const data: Channel[] = await ChannelService.getAllChannel();
     data.forEach(d => {
       this.channels.push(d);
     });

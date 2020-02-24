@@ -1,7 +1,7 @@
 <template>
   <v-container style="max-width:1185px">
-    <div v-for="feald in fealds" :key="feald.id">
-      <CommonCardList :feald="feald"></CommonCardList>
+    <div v-for="field in fields" :key="field.id">
+      <CommonCardList :field="field"></CommonCardList>
     </div>
   </v-container>
 </template>
@@ -16,7 +16,7 @@ import CommonCardList from "@/components/CommonCardList.vue";
   }
 })
 export default class Schedules extends Vue {
-  fealds = [
+  fields = [
     {
       id: "premier",
       title: "プレミア公開前",

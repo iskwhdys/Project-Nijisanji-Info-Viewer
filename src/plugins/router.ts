@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Schedules from '../views/Schedules.vue'
-import Broadcasters from '../views/Broadcasters.vue'
+import ChannelList from '../views/ChannelList.vue'
 import About from '../views/About.vue'
 
 Vue.use(VueRouter)
@@ -19,9 +19,9 @@ const routes = [
     component: Schedules
   },
   {
-    path: '/broadcasters',
-    name: 'broadcasters',
-    component: Broadcasters
+    path: '/channels',
+    name: 'channels',
+    component: ChannelList
   },
   {
     path: '/about',
