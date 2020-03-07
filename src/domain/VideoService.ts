@@ -23,8 +23,8 @@ export class VideoService {
     return data;
   }
 
-  async getChannelVideo(channelId: string): Promise<Video[]> {
-    const data: Video[] = await this.get(`${this.BASE_URL}/video/channel/${channelId}`);
+  async getChannelVideo(channelId: string, mode: string, from: string): Promise<Video[]> {
+    const data: Video[] = await this.get(`${this.BASE_URL}/video/channel/${channelId}?mode=${mode}&from=${from}`);
 
     let result: Video[] = [];
 
