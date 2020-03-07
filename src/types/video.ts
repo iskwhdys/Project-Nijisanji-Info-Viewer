@@ -11,7 +11,7 @@ export interface Video {
   liveViews: number;
   type: string;
   channelId: string;
-  channelTitle: string;
+  // channelTitle: string;
 
   rank: Rank;
   fieldType: string;

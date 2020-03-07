@@ -79,28 +79,17 @@ v-card-text {
         <div style="position:relative">
           <div class="Card-Buttom-Frame" :style="getRankColor(video.rank)"></div>
           <v-card-title style="padding:8px; height:60px">
-            <div class="title-text">
-              {{ video.title }}
-            </div>
+            <div class="title-text">{{ video.title }}</div>
           </v-card-title>
           <v-card-text style="padding:8px;">
             <div>
-              <div v-if="(video.fieldType == 'live') | (video.fieldType == 'archive')" class="info-text">
-                {{ video.liveStart | toFormatDate }}
-              </div>
-              <div v-else-if="video.fieldType == 'upload'" class="info-text">{{ video.uploadDate | toFormatDate }}</div>
-              <div v-else-if="video.fieldType == 'premier'" class="info-text">
-                {{ video.liveSchedule | toFormatDateYYYY }} 公開
-              </div>
-              <div v-else-if="video.fieldType == 'schedule'" class="info-text">
-                {{ video.liveSchedule | toFormatDateYYYY }} 開始
-              </div>
+              <div class="info-text">{{ video | generateStartTime }}</div>
               <span class="info-text">
-                <span v-if="video.fieldType == 'live'">👤{{ video.liveViews }}</span>
-                <span v-else-if="video.fieldType == 'premier' || video.fieldType == 'schedule'"></span>
-                <span v-else>▶{{ video.views }}</span>
-                <span v-if="video.likes != 0">👍{{ video.likes }}</span>
-                <span v-if="video.likes != 0 && !($vuetify.breakpoint.xs && showIcon)">({{ video | getRating }})</span>
+                <span>{{ video | genarateViews }}</span>
+                <span v-if="video.likes != 0">
+                  👍{{ video.likes }}
+                  <span v-if="!($vuetify.breakpoint.xs && showIcon)"> ({{ video | getRating }}) </span>
+                </span>
               </span>
             </div>
           </v-card-text>
@@ -110,7 +99,7 @@ v-card-text {
     <div v-if="showIcon" @click.stop="showChannelCardList()">
       <v-img
         :class="$vuetify.breakpoint.xs ? 'Card-Channel-Icon-XS' : 'Card-Channel-Icon'"
-        :src="this.video.channelId | channelThumbnailMiniUrl"
+        :src="this.video.channelId | channelThumbnailUrl"
       />
     </div>
   </div>
@@ -128,6 +117,47 @@ import AppConfig from "@/domain/AppConfig";
     VideoCard
   },
   filters: {
+    generateStartTime: function(video: Video) {
+      const type = video.fieldType;
+      const startDate =
+        type == "live" || type == "archive"
+          ? video.liveStart
+          : type == "upload"
+          ? video.uploadDate
+          : video.liveSchedule;
+
+      const start = moment(startDate).format("YYYY/MM/DD");
+      const yesterday = moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY/MM/DD");
+      const today = moment(new Date()).format("YYYY/MM/DD");
+      const tomorrow = moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY/MM/DD");
+
+      const prefix = start == yesterday ? "昨日" : start == today ? "今日" : start == tomorrow ? "明日" : "";
+      const suffix =
+        type == "live" || type == "archive"
+          ? "～"
+          : type == "premier"
+          ? " 公開予定"
+          : type == "schedule"
+          ? " 配信予定"
+          : "";
+
+      if (prefix != "") {
+        return `${prefix} ${moment(startDate).format("HH:mm")}${suffix}`;
+      } else {
+        if (new Date(startDate).getFullYear() == new Date().getFullYear()) {
+          return `${moment(startDate).format("M/D HH:mm")}${suffix}`;
+        } else {
+          return `${moment(startDate).format("YYYY/M/D HH:mm")}${suffix}`;
+        }
+      }
+    },
+
+    genarateViews: function(video: Video) {
+      if (video.fieldType == "live") return `👤${video.liveViews}`;
+      if (video.fieldType == "archive" || video.fieldType == "upload") return `▶${video.views}`;
+      return "";
+    },
+
     toLiveTime: function(startDate: Date) {
       const totalSec = moment(new Date()).diff(moment(startDate)) / 1000;
       const hour = Math.floor(Math.floor(totalSec / 60) / 60);
@@ -135,14 +165,14 @@ import AppConfig from "@/domain/AppConfig";
       const sec = totalSec - hour * 60 * 60 - min * 60;
       const sHour = hour > 0 ? hour + "時間" : "";
       const sMin = min > 0 ? min + "分" : "";
-      return sHour + sMin + "経過";
+
+      if (sHour + sMin == "") {
+        return "開始直後";
+      } else {
+        return sHour + sMin + "経過";
+      }
     },
-    toFormatDate: function(date: Date) {
-      return moment(date).format("M/DD HH:mm");
-    },
-    toFormatDateYYYY: function(date: Date) {
-      return moment(date).format("YYYY/MM/DD HH:mm");
-    },
+
     toTime: function(totalSec: number) {
       const hour = Math.floor(Math.floor(totalSec / 60) / 60);
       const min = Math.floor((totalSec - hour * 60 * 60) / 60);
@@ -150,17 +180,18 @@ import AppConfig from "@/domain/AppConfig";
       const text = (hour > 0 ? hour + ":" : "") + (min >= 0 ? ("0" + min).slice(-2) + ":" : "") + ("0" + sec).slice(-2);
       return text;
     },
+
     getRating: function(video: Video) {
       const sum = video.likes * 5 + video.dislikes;
       const count = video.likes + video.dislikes;
       const rate = sum / count;
       return rate.toFixed(2);
     },
+
     videoThumbnailMiniUrl: function(id: string) {
       return `${AppConfig.apiUrl}/image/video/${id}/thumbnail_mini`;
     },
-
-    channelThumbnailMiniUrl: function(id: string) {
+    channelThumbnailUrl: function(id: string) {
       return `${AppConfig.apiUrl}/image/channel/${id}/thumbnail`;
     }
   }

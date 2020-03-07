@@ -1,32 +1,24 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import Schedules from '../views/Schedules.vue'
-import ChannelList from '../views/ChannelList.vue'
-import About from '../views/About.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: Home
+    component: () => import('@/views/Home.vue'),
   },
   {
     path: '/schedules',
-    name: 'schedules',
-    component: Schedules
+    component: () => import('@/views/Schedules.vue'),
   },
   {
     path: '/channels',
-    name: 'channels',
-    component: ChannelList
+    component: () => import('@/views/ChannelList.vue'),
   },
   {
     path: '/about',
-    name: 'about',
-    component: About
+    component: () => import('@/views/About.vue'),
   },
 ]
 

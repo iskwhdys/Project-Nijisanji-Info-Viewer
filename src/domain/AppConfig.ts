@@ -9,9 +9,9 @@ export class AppConfig {
 
   public get apiUrl(): string {
     // 本番用
-    //return "http://nijisanji-live.com:8090/api";
+    return "http://nijisanji-live.com:8090/api";
     // 開発用-ローカル
-    return "http://192.168.11.6:8090/api"
+    // return "http://192.168.11.6:8090/api"
   }
 }
 
