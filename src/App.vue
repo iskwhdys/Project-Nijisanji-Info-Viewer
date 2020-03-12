@@ -3,11 +3,9 @@
     <!--  <v-app-bar app clipped-left color="#2A4871" dense hide-on-scroll>-->
     <v-app-bar app clipped-left dense>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-icon class="mx-4"></v-icon>
       <v-toolbar-title class="mr-12 align-center">
-        <span class="title">にじさんじライブ新着</span>
+        <h1 class="title">にじさんじライブ新着</h1>
       </v-toolbar-title>
-      <v-spacer />
     </v-app-bar>
 
     <v-navigation-drawer v-model="drawer" app clipped>
@@ -35,9 +33,9 @@
         </v-list-item>
 
         <v-subheader class="mt-4 grey--text text--darken-1">にじさんじライブ新着</v-subheader>
-        <!-- <v-list-item link to="/about">
+        <v-list-item link to="/about">
           <v-list-item-title class="grey--text text--darken-1">このサイトについて</v-list-item-title>
-        </v-list-item> -->
+        </v-list-item>
         <v-list-item href="https://twitter.com/2j3j_live_com">
           <v-list-item-title class="grey--text text--darken-1">お問い合わせ(Twitter)</v-list-item-title>
         </v-list-item>
