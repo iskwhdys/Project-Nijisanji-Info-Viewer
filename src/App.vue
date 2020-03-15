@@ -62,7 +62,7 @@ export default {
       { icon: "mdi-home", text: "ホーム", to: "/" },
       { icon: "mdi-timetable", text: "配信予定", to: "/schedules" },
       { icon: "mdi-account-group", text: "ライバー", to: "/broadcasters" },
-      // { icon: "mdi-youtube-subscription", text: "チャンネル", to: "/channels" },
+      { icon: "mdi-youtube-subscription", text: "チャンネル", to: "/channels" },
     ],
     links: [
       { text: "にじさんじ公式", to: "http://nijisanji.ichikara.co.jp/" },
