@@ -1,6 +1,5 @@
 <template>
   <v-app id="inspire">
-    <!--  <v-app-bar app clipped-left color="#2A4871" dense hide-on-scroll>-->
     <v-app-bar app clipped-left dense>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="mr-12 align-center">
@@ -57,32 +56,30 @@
 
 <script>
 export default {
-  props: {
-    source: String
-  },
   data: () => ({
     drawer: null,
     pages: [
       { icon: "mdi-home", text: "ホーム", to: "/" },
       { icon: "mdi-timetable", text: "配信予定", to: "/schedules" },
-      { icon: "mdi-account-group", text: "チャンネル", to: "/channels" }
+      { icon: "mdi-account-group", text: "ライバー", to: "/broadcasters" },
+      // { icon: "mdi-youtube-subscription", text: "チャンネル", to: "/channels" },
     ],
     links: [
       { text: "にじさんじ公式", to: "http://nijisanji.ichikara.co.jp/" },
-      { text: "にじさんじ非公式wiki", to: "https://wikiwiki.jp/nijisanji/" }
-    ]
+      { text: "にじさんじ非公式wiki", to: "https://wikiwiki.jp/nijisanji/" },
+    ],
   }),
   methods: {
     clickChangeTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
       localStorage.setItem("DarkTheme", this.$vuetify.theme.dark ? "True" : "False");
-    }
+    },
   },
   created() {
     if (localStorage.getItem("DarkTheme") == null) {
       localStorage.setItem("DarkTheme", "True");
     }
     this.$vuetify.theme.dark = localStorage.getItem("DarkTheme") == "True";
-  }
+  },
 };
 </script>

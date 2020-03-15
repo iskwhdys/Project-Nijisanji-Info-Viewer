@@ -10,7 +10,7 @@
             {{ channel.title }}
           </v-list-item-title>
           <v-list-item-subtitle>
-            <v-btn @click.stop="" icon :href="'https://www.youtube.com/channel/' + channel.id">
+            <v-btn @click.stop="" icon :href="`https://www.youtube.com/channel/${channel.id}`">
               <v-icon color="red">mdi-youtube</v-icon>
             </v-btn>
             {{ channel.subscriberCount | toSubscribeText }}
@@ -50,7 +50,7 @@ import moment from "moment";
 
 @Component({
   components: {
-    VideoCard
+    VideoCard,
   },
   filters: {
     toSubscribeText: function(count: number) {
@@ -61,8 +61,8 @@ import moment from "moment";
     },
     channelThumbnailUrl: function(id: string) {
       return `${AppConfig.apiUrl}/image/channel/${id}/thumbnail`;
-    }
-  }
+    },
+  },
 })
 export default class ChannelCardList extends Vue {
   @Prop() private channel!: Channel;
