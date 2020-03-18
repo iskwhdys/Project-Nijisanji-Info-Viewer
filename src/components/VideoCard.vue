@@ -114,7 +114,7 @@ import AppConfig from "@/domain/AppConfig";
 
 @Component({
   components: {
-    VideoCard
+    VideoCard,
   },
   filters: {
     generateStartTime: function(video: Video) {
@@ -153,7 +153,10 @@ import AppConfig from "@/domain/AppConfig";
     },
 
     genarateViews: function(video: Video) {
-      if (video.fieldType == "live") return `👤${video.liveViews}`;
+      if (video.fieldType == "live") {
+        const count = video.liveViews == null ? "取得中" : video.liveViews;
+        return `👤${count}`;
+      }
       if (video.fieldType == "archive" || video.fieldType == "upload") return `▶${video.views}`;
       return "";
     },
@@ -193,8 +196,8 @@ import AppConfig from "@/domain/AppConfig";
     },
     channelThumbnailUrl: function(id: string) {
       return `${AppConfig.apiUrl}/image/channel/${id}/thumbnail`;
-    }
-  }
+    },
+  },
 })
 export default class VideoCard extends Vue {
   @Prop() private video!: Video;
