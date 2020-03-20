@@ -55,8 +55,14 @@
     <v-bottom-sheet v-model="showChannelCardList">
       <BroadcasterVideos
         v-on:child-event="showChannelCardList = !showChannelCardList"
-        v-if="showChannelCardList"
+        v-if="showChannelCardList && broadcaster"
         :broadcaster="broadcaster"
+      />
+      <ChannelCardList
+        v-on:child-event="showChannelCardList = !showChannelCardList"
+        v-if="showChannelCardList && channel"
+        :channel="channel"
+        :open="true"
       />
     </v-bottom-sheet>
   </div>
@@ -67,8 +73,10 @@ import { Component, Vue, Prop, Mixins } from "vue-property-decorator";
 import moment from "moment";
 
 import VideoService from "@/domain/VideoService";
+import ChannelService from "@/domain/ChannelService";
 import BroadcasterService from "@/domain/BroadcasterService";
 import { Broadcaster } from "@/types/broadcaster";
+import { Channel } from "@/types/channel";
 import { Video, Rank, VideoCommon } from "@/types/video.ts";
 
 import VideoCard from "@/components/VideoCard.vue";
@@ -88,7 +96,8 @@ export default class CommonCardList extends Vue {
   @Prop() private field!: any;
 
   showChannelCardList: Boolean = false;
-  broadcaster!: Broadcaster;
+  broadcaster: Broadcaster | null = null;
+  channel: Channel | null = null;
 
   filters = [
     { value: true, key: Rank.none },
@@ -107,8 +116,15 @@ export default class CommonCardList extends Vue {
 
   async showChannelPanel(video: Video) {
     if (this.showChannelCardList == false) {
-      this.broadcaster = await BroadcasterService.getFromChannel(video.channelId);
+      try {
+        this.broadcaster = await BroadcasterService.getFromChannel(video.channelId);
+        this.channel = null;
+      } catch (error) {
+        this.channel = await ChannelService.get(video.channelId);
+        this.broadcaster = null;
+      }
     }
+
     this.showChannelCardList = !this.showChannelCardList;
   }
 
