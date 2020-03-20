@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import AppCongig from "@/domain/AppConfig";
 import { Broadcaster } from "@/types/broadcaster.ts";
-import ChannelService from "../domain/ChannelService";
+import ChannelService from "@/domain/ChannelService";
 
 export class BroadcasterService {
   private static INSTANCE: BroadcasterService;
@@ -33,6 +33,17 @@ export class BroadcasterService {
   async get(id: string): Promise<Broadcaster> {
     const url = `${this.BASE_URL}/broadcaster/${id}`;
     return (await Axios.get(url, {})).data;
+  }
+
+  async getFromChannel(channelId: string): Promise<Broadcaster> {
+    const url = `${this.BASE_URL}/broadcaster?channelId=${channelId}`;
+    const broadcaster: Broadcaster = (await Axios.get(url, {})).data[0];
+    broadcaster.channel = await ChannelService.get(broadcaster.youtube);
+    if (broadcaster.youtube2) {
+      broadcaster.channel2 = await ChannelService.get(broadcaster.youtube2);
+    }
+
+    return broadcaster;
   }
 }
 

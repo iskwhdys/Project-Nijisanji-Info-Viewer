@@ -10,28 +10,31 @@
           <v-list-item-title> {{ broadcaster.name }} </v-list-item-title>
 
           <v-list-item-subtitle>
-            <v-btn @click.stop icon :href="broadcaster.twitter | twitterUrl">
+            <v-btn @click.stop="" icon :href="broadcaster.twitter | twitterUrl">
               <v-icon color="blue">mdi-twitter</v-icon>
             </v-btn>
-            <v-btn @click.stop icon :href="broadcaster.name | wikiUrl">
+            <v-btn @click.stop="" icon :href="broadcaster.name | wikiUrl">
               <v-icon>mdi-wikipedia</v-icon>
             </v-btn>
-            <v-btn @click.stop icon :href="broadcaster.youtube | youtubelUrl">
+            <v-btn @click.stop="" icon :href="broadcaster.youtube | youtubelUrl">
               <v-icon color="red">mdi-youtube</v-icon>
             </v-btn>
             <span v-if="broadcaster.channel"> {{ broadcaster.channel.subscriberCount | toSubscribeText }} </span>
           </v-list-item-subtitle>
 
           <v-list-item-subtitle>
-            <v-btn @click.stop icon v-if="broadcaster.youtube2" :href="broadcaster.youtube2 | youtubelUrl">
+            <v-btn @click.stop="" icon v-if="broadcaster.youtube2" :href="broadcaster.youtube2 | youtubelUrl">
               <v-icon color="red">mdi-youtube</v-icon>
             </v-btn>
             <span v-if="broadcaster.channel2"> {{ broadcaster.channel2.subscriberCount | toSubscribeText }} </span>
           </v-list-item-subtitle>
         </v-list-item-content>
 
-        <v-icon> mdi-chevron-down-circle-outline </v-icon>
+        <v-icon>mdi-close </v-icon>
       </v-list-item>
+
+      <ChannelVideos :channel="broadcaster.channel"></ChannelVideos>
+      <ChannelVideos v-if="broadcaster.channel2" :channel="broadcaster.channel2"></ChannelVideos>
     </v-card>
   </div>
 </template>
@@ -42,13 +45,14 @@ import moment from "moment";
 
 import AppConfig from "@/domain/AppConfig";
 import VideoService from "@/domain/VideoService";
-
-import { Video, VideoCommon } from "@/types/video.ts";
-import { Broadcaster } from "@/types/broadcaster.ts";
 import { Channel } from "@/types/channel.ts";
+import { Broadcaster } from "@/types/broadcaster.ts";
 
+import ChannelVideos from "@/components/ChannelVideos.vue";
 @Component({
-  components: {},
+  components: {
+    ChannelVideos,
+  },
   filters: {
     toSubscribeText: function(count: number) {
       if (10000 > count) return count + "人";
@@ -70,11 +74,11 @@ import { Channel } from "@/types/channel.ts";
     },
   },
 })
-export default class BroadcasterCard extends Vue {
+export default class BroadcasterVideos extends Vue {
   @Prop() private broadcaster!: Broadcaster;
 
   cardClick() {
-    this.$emit("child-event", this.broadcaster);
+    this.$emit("child-event");
   }
 }
 </script>

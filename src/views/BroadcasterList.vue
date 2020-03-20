@@ -33,12 +33,17 @@
 
       <v-row dense>
         <v-col xs="12" :sm="gridMode" v-for="broadcaster in broadcasters" :key="broadcaster.id">
-          <BroadcasterCard :broadcaster="broadcaster" v-on:child-event="showChannelPanel"></BroadcasterCard>
+          <BroadcasterCard :broadcaster="broadcaster" v-on:child-event="showChannelPanel" />
         </v-col>
       </v-row>
 
       <v-bottom-sheet v-model="showChannelCardList">
-        <ChannelCardList v-if="showChannelCardList" :channel="channel" :open="true" />
+        <ChannelCardList v-if="showChannelCardList" :channel="broadcaster.channel" :open="true" />
+        <ChannelCardList
+          v-if="showChannelCardList && broadcaster.channel2"
+          :channel="broadcaster.channel2"
+          :open="true"
+        />
       </v-bottom-sheet>
     </v-container>
   </div>
@@ -46,11 +51,11 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import BroadcasterCard from "@/components/BroadcasterCard.vue";
-import { Broadcaster } from "@/types/broadcaster.ts";
 import BroadcasterService from "@/domain/BroadcasterService";
+import { Broadcaster } from "@/types/broadcaster.ts";
+
+import BroadcasterCard from "@/components/BroadcasterCard.vue";
 import ChannelCardList from "@/components/ChannelCardList.vue";
-import { Channel } from "../types/channel";
 
 @Component({
   components: {
@@ -68,7 +73,7 @@ export default class BroadcasterList extends Vue {
   sortMode: string = "";
 
   showChannelCardList: Boolean = false;
-  channel!: Channel;
+  broadcaster!: Broadcaster;
 
   async created() {
     this.initSetting();
@@ -87,9 +92,9 @@ export default class BroadcasterList extends Vue {
     });
   }
 
-  showChannelPanel(channel: Channel) {
+  showChannelPanel(broadcaster: Broadcaster) {
     if (this.showChannelCardList == false) {
-      this.channel = channel;
+      this.broadcaster = broadcaster;
     }
     this.showChannelCardList = !this.showChannelCardList;
   }

@@ -52,8 +52,12 @@
       </v-col>
     </v-row>
 
-    <v-bottom-sheet v-model="showChannelCardList" inset>
-      <ChannelCardList v-if="showChannelCardList" :channel="channel" :open="true" />
+    <v-bottom-sheet v-model="showChannelCardList">
+      <BroadcasterVideos
+        v-on:child-event="showChannelCardList = !showChannelCardList"
+        v-if="showChannelCardList"
+        :broadcaster="broadcaster"
+      />
     </v-bottom-sheet>
   </div>
 </template>
@@ -61,31 +65,36 @@
 <script lang="ts">
 import { Component, Vue, Prop, Mixins } from "vue-property-decorator";
 import moment from "moment";
-import VideoCard from "@/components/VideoCard.vue";
-import { Video, Rank, VideoCommon } from "@/types/video.ts";
-import { Channel } from "@/types/channel.ts";
-import ChannelCardList from "@/components/ChannelCardList.vue";
-import { Dictionary } from "vue-router/types/router";
-import ChannelService from "@/domain/ChannelService";
+
 import VideoService from "@/domain/VideoService";
+import BroadcasterService from "@/domain/BroadcasterService";
+import { Broadcaster } from "@/types/broadcaster";
+import { Video, Rank, VideoCommon } from "@/types/video.ts";
+
+import VideoCard from "@/components/VideoCard.vue";
+import ChannelCardList from "@/components/ChannelCardList.vue";
+import BroadcasterCard from "@/components/BroadcasterCard.vue";
+import BroadcasterVideos from "@/components/BroadcasterVideos.vue";
 
 @Component({
   components: {
     VideoCard,
-    ChannelCardList
-  }
+    ChannelCardList,
+    BroadcasterCard,
+    BroadcasterVideos,
+  },
 })
 export default class CommonCardList extends Vue {
   @Prop() private field!: any;
 
   showChannelCardList: Boolean = false;
-  channel!: Channel;
+  broadcaster!: Broadcaster;
 
   filters = [
     { value: true, key: Rank.none },
     { value: true, key: Rank.low },
     { value: true, key: Rank.middle },
-    { value: true, key: Rank.high }
+    { value: true, key: Rank.high },
   ];
 
   getRankColor(rank: Rank) {
@@ -98,7 +107,7 @@ export default class CommonCardList extends Vue {
 
   async showChannelPanel(video: Video) {
     if (this.showChannelCardList == false) {
-      this.channel = await ChannelService.get(video.channelId);
+      this.broadcaster = await BroadcasterService.getFromChannel(video.channelId);
     }
     this.showChannelCardList = !this.showChannelCardList;
   }
