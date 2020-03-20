@@ -54,7 +54,11 @@
 
     <v-bottom-sheet v-model="showChannelCard">
       <div v-if="showChannelCard && broadcaster">
-        <BroadcasterCard v-on:child-event="showChannelCard = !showChannelCard" :broadcaster="broadcaster" />
+        <BroadcasterCard
+          v-on:child-event="showChannelCard = !showChannelCard"
+          :broadcaster="broadcaster"
+          :icon="'mdi-close'"
+        />
         <ChannelVideos :channel="broadcaster.channel"></ChannelVideos>
         <ChannelVideos :channel="broadcaster.channel2" v-if="broadcaster.channel2"></ChannelVideos>
       </div>

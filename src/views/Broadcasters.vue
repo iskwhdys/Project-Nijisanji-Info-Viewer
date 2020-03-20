@@ -33,7 +33,11 @@
 
       <v-row dense>
         <v-col xs="12" :sm="gridMode" v-for="broadcaster in broadcasters" :key="broadcaster.id">
-          <BroadcasterCard :broadcaster="broadcaster" v-on:child-event="showChannelPanel" />
+          <BroadcasterCard
+            :broadcaster="broadcaster"
+            v-on:child-event="showChannelPanel"
+            :icon="'mdi-chevron-down-circle-outline'"
+          />
         </v-col>
       </v-row>
 

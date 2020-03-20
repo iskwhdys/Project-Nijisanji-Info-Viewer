@@ -17,7 +17,7 @@
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-icon>
-          {{ open ? "mdi-chevron-down-circle-outline" : "mdi-chevron-up-circle-outline" }}
+          {{ !open ? "mdi-chevron-down-circle-outline" : "mdi-chevron-up-circle-outline" }}
         </v-icon>
       </v-list-item>
     </v-card>

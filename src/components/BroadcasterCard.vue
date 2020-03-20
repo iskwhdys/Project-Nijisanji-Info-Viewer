@@ -30,7 +30,7 @@
           </v-list-item-subtitle>
         </v-list-item-content>
 
-        <v-icon> mdi-chevron-down-circle-outline </v-icon>
+        <v-icon> {{ icon }} </v-icon>
       </v-list-item>
     </v-card>
   </div>
@@ -72,6 +72,7 @@ import { Channel } from "@/types/channel.ts";
 })
 export default class BroadcasterCard extends Vue {
   @Prop() private broadcaster!: Broadcaster;
+  @Prop() private icon!: string;
 
   cardClick() {
     this.$emit("child-event", this.broadcaster);
