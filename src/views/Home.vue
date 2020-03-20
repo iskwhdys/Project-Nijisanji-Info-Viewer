@@ -12,8 +12,8 @@ import CommonCardList from "@/components/CommonCardList.vue";
 
 @Component({
   components: {
-    CommonCardList
-  }
+    CommonCardList,
+  },
 })
 export default class Home extends Vue {
   fields = [
@@ -22,12 +22,12 @@ export default class Home extends Vue {
       title: "ライブ中",
       icon: {
         name: "mdi-access-point",
-        color: "red"
+        color: "red",
       },
       get: null,
       reload: { id: "new", flag: false },
       videos: [],
-      filter: true
+      filter: true,
     },
     {
       id: "upload",
@@ -36,17 +36,17 @@ export default class Home extends Vue {
       get: { id: "get", flag: false, count: 10 },
       reload: { id: "new", flag: false },
       videos: [],
-      filter: true
+      filter: true,
     },
     {
       id: "archive",
       title: "アーカイブ",
-      icon: { name: "mdi-library-video" },
+      icon: { name: "mdi-play-box-multiple" },
       get: { id: "get", flag: false, count: 30 },
       reload: { id: "new", flag: false },
       videos: [],
-      filter: true
-    }
+      filter: true,
+    },
   ];
 }
 </script>

@@ -23,6 +23,28 @@ export class VideoService {
     return data;
   }
 
+  async getBroadcasterVideo(channelId: string, mode: string, from: string): Promise<Video[]> {
+    const data: Video[] = await this.get(`${this.BASE_URL}/video/channel/${channelId}?mode=${mode}&from=${from}`);
+
+    let result: Video[] = [];
+
+    // 予定を抽出
+    data.forEach(d => {
+      if (d.type == "PremierReserve" || d.type == "LiveReserve") result.push(d);
+    });
+    // ライブを抽出
+    data.forEach(d => {
+      if (d.type == "PremierLive" || d.type == "LiveLive") result.push(d);
+    });
+    // 上記以外を抽出
+    data.forEach(d => {
+      if (d.type != "PremierReserve" && d.type != "LiveReserve" && d.type != "PremierLive" && d.type != "LiveLive") {
+        result.push(d);
+      }
+    });
+
+    return result;
+  }
   async getChannelVideo(channelId: string, mode: string, from: string): Promise<Video[]> {
     const data: Video[] = await this.get(`${this.BASE_URL}/video/channel/${channelId}?mode=${mode}&from=${from}`);
 

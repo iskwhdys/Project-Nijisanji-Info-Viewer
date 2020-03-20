@@ -41,6 +41,10 @@ v-card-text {
   border-radius: 10px;
   font-size: 12px;
 }
+.Card:hover .Card-Thumbnail-Time {
+  transition: all 0.3s;
+  opacity: 0;
+}
 .Card-Thumbnail-Duration {
   color: #4091dd;
   border: solid 2px #4091dd;
@@ -59,7 +63,7 @@ v-card-text {
 <template>
   <div style="position:relative">
     <v-card :width="$vuetify.breakpoint.xs ? 144 : 176" :href="'https://www.youtube.com/watch?v=' + video.id">
-      <div>
+      <div class="Card">
         <v-img
           :width="$vuetify.breakpoint.xs ? 144 : 176"
           :height="$vuetify.breakpoint.xs ? 80 : 98"

@@ -35,9 +35,12 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
+import { Video, VideoCommon } from "@/types/video.ts";
 import { Channel } from "@/types/channel.ts";
+import VideoService from "@/domain/VideoService";
 import { Broadcaster } from "@/types/broadcaster.ts";
 import AppConfig from "@/domain/AppConfig";
+import moment from "moment";
 
 @Component({
   components: {},
@@ -61,9 +64,41 @@ import AppConfig from "@/domain/AppConfig";
 })
 export default class BroadcasterCard extends Vue {
   @Prop() private broadcaster!: Broadcaster;
+  @Prop() private open!: Boolean;
+  loading: boolean = false;
+  videos: Video[] = [];
 
   showChannelCardList(channel: Channel) {
     this.$emit("child-event", channel);
   }
+
+  // async created() {
+  //   if (this.open) {
+  //     this.setVideoData();
+  //   }
+  // }
+
+  // async showVideoSlide() {
+  //   if (this.videos.length == 0) {
+  //     this.setVideoData();
+  //   } else {
+  //     this.videos.splice(0);
+  //   }
+  // }
+
+  // async setVideoData() {
+  //   this.videos.splice(0);
+  //   (await VideoService.getChannelVideo(this.channel.id, "new", "")).forEach(v => this.videos.push(v));
+  // }
+
+  // async getVideos() {
+  //   this.loading = true;
+
+  //   const video = this.videos[this.videos.length - 1];
+  //   const from = moment(video.uploadDate).format("YYYY-MM-DD HH:mm:ss");
+  //   (await VideoService.getChannelVideo(this.channel.id, "get", from)).forEach(v => this.videos.push(v));
+
+  //   this.loading = false;
+  // }
 }
 </script>
