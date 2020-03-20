@@ -52,15 +52,15 @@
       </v-col>
     </v-row>
 
-    <v-bottom-sheet v-model="showChannelCardList">
+    <v-bottom-sheet v-model="showChannelCard">
       <BroadcasterVideos
-        v-on:child-event="showChannelCardList = !showChannelCardList"
-        v-if="showChannelCardList && broadcaster"
+        v-on:child-event="showChannelCard = !showChannelCard"
+        v-if="showChannelCard && broadcaster"
         :broadcaster="broadcaster"
       />
-      <ChannelCardList
-        v-on:child-event="showChannelCardList = !showChannelCardList"
-        v-if="showChannelCardList && channel"
+      <ChannelCard
+        v-on:child-event="showChannelCard = !showChannelCard"
+        v-if="showChannelCard && channel"
         :channel="channel"
         :open="true"
       />
@@ -80,14 +80,14 @@ import { Channel } from "@/types/channel";
 import { Video, Rank, VideoCommon } from "@/types/video.ts";
 
 import VideoCard from "@/components/VideoCard.vue";
-import ChannelCardList from "@/components/ChannelCardList.vue";
+import ChannelCard from "@/components/ChannelCard.vue";
 import BroadcasterCard from "@/components/BroadcasterCard.vue";
 import BroadcasterVideos from "@/components/BroadcasterVideos.vue";
 
 @Component({
   components: {
     VideoCard,
-    ChannelCardList,
+    ChannelCard,
     BroadcasterCard,
     BroadcasterVideos,
   },
@@ -95,7 +95,7 @@ import BroadcasterVideos from "@/components/BroadcasterVideos.vue";
 export default class CommonCardList extends Vue {
   @Prop() private field!: any;
 
-  showChannelCardList: Boolean = false;
+  showChannelCard: Boolean = false;
   broadcaster: Broadcaster | null = null;
   channel: Channel | null = null;
 
@@ -115,7 +115,7 @@ export default class CommonCardList extends Vue {
   }
 
   async showChannelPanel(video: Video) {
-    if (this.showChannelCardList == false) {
+    if (this.showChannelCard == false) {
       try {
         this.broadcaster = await BroadcasterService.getFromChannel(video.channelId);
         this.channel = null;
@@ -125,7 +125,7 @@ export default class CommonCardList extends Vue {
       }
     }
 
-    this.showChannelCardList = !this.showChannelCardList;
+    this.showChannelCard = !this.showChannelCard;
   }
 
   async reloadVideos(field: any) {

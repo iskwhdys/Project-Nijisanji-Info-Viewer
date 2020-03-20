@@ -37,13 +37,9 @@
         </v-col>
       </v-row>
 
-      <v-bottom-sheet v-model="showChannelCardList">
-        <ChannelCardList v-if="showChannelCardList" :channel="broadcaster.channel" :open="true" />
-        <ChannelCardList
-          v-if="showChannelCardList && broadcaster.channel2"
-          :channel="broadcaster.channel2"
-          :open="true"
-        />
+      <v-bottom-sheet v-model="showChannelCard">
+        <ChannelCard v-if="showChannelCard" :channel="broadcaster.channel" :open="true" />
+        <ChannelCard v-if="showChannelCard && broadcaster.channel2" :channel="broadcaster.channel2" :open="true" />
       </v-bottom-sheet>
     </v-container>
   </div>
@@ -55,12 +51,12 @@ import BroadcasterService from "@/domain/BroadcasterService";
 import { Broadcaster } from "@/types/broadcaster.ts";
 
 import BroadcasterCard from "@/components/BroadcasterCard.vue";
-import ChannelCardList from "@/components/ChannelCardList.vue";
+import ChannelCard from "@/components/ChannelCard.vue";
 
 @Component({
   components: {
     BroadcasterCard,
-    ChannelCardList,
+    ChannelCard,
   },
 })
 export default class BroadcasterList extends Vue {
@@ -72,7 +68,7 @@ export default class BroadcasterList extends Vue {
   sortKind: string = "";
   sortMode: string = "";
 
-  showChannelCardList: Boolean = false;
+  showChannelCard: Boolean = false;
   broadcaster!: Broadcaster;
 
   async created() {
@@ -93,10 +89,10 @@ export default class BroadcasterList extends Vue {
   }
 
   showChannelPanel(broadcaster: Broadcaster) {
-    if (this.showChannelCardList == false) {
+    if (this.showChannelCard == false) {
       this.broadcaster = broadcaster;
     }
-    this.showChannelCardList = !this.showChannelCardList;
+    this.showChannelCard = !this.showChannelCard;
   }
 
   sort(a: Broadcaster, b: Broadcaster): number {

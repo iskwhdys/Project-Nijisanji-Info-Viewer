@@ -25,7 +25,7 @@
 
       <v-row dense>
         <v-col xs="12" :sm="gridMode" v-for="channel in channels" :key="channel.id">
-          <ChannelCardList :channel="channel"></ChannelCardList>
+          <ChannelCard :channel="channel"></ChannelCard>
         </v-col>
       </v-row>
     </v-container>
@@ -34,13 +34,13 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import ChannelCardList from "@/components/ChannelCardList.vue";
+import ChannelCard from "@/components/ChannelCard.vue";
 import { Channel } from "@/types/channel.ts";
 import ChannelService from "@/domain/ChannelService";
 
 @Component({
   components: {
-    ChannelCardList,
+    ChannelCard,
   },
 })
 export default class ChannelList extends Vue {

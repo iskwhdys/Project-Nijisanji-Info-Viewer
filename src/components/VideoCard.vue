@@ -100,7 +100,7 @@ v-card-text {
         </div>
       </div>
     </v-card>
-    <div v-if="showIcon" @click.stop="showChannelCardList()">
+    <div v-if="showIcon" @click.stop="showChannelCard()">
       <v-img
         :class="$vuetify.breakpoint.xs ? 'Card-Channel-Icon-XS' : 'Card-Channel-Icon'"
         :src="this.video.channelId | channelThumbnailUrl"
@@ -207,7 +207,7 @@ export default class VideoCard extends Vue {
   @Prop() private video!: Video;
   @Prop() private showIcon!: Boolean;
 
-  async showChannelCardList() {
+  async showChannelCard() {
     this.$emit("child-event");
   }
 
