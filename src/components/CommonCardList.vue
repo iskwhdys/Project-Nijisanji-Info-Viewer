@@ -53,17 +53,14 @@
     </v-row>
 
     <v-bottom-sheet v-model="showChannelCard">
-      <BroadcasterVideos
-        v-on:child-event="showChannelCard = !showChannelCard"
-        v-if="showChannelCard && broadcaster"
-        :broadcaster="broadcaster"
-      />
-      <ChannelCard
-        v-on:child-event="showChannelCard = !showChannelCard"
-        v-if="showChannelCard && channel"
-        :channel="channel"
-        :open="true"
-      />
+      <div v-if="showChannelCard && broadcaster">
+        <BroadcasterCard v-on:child-event="showChannelCard = !showChannelCard" :broadcaster="broadcaster" />
+        <ChannelVideos :channel="broadcaster.channel"></ChannelVideos>
+        <ChannelVideos :channel="broadcaster.channel2" v-if="broadcaster.channel2"></ChannelVideos>
+      </div>
+      <div v-if="showChannelCard && channel">
+        <ChannelCard v-on:child-event="showChannelCard = !showChannelCard" :channel="channel" :open="true" />
+      </div>
     </v-bottom-sheet>
   </div>
 </template>
@@ -75,6 +72,7 @@ import moment from "moment";
 import VideoService from "@/domain/VideoService";
 import ChannelService from "@/domain/ChannelService";
 import BroadcasterService from "@/domain/BroadcasterService";
+
 import { Broadcaster } from "@/types/broadcaster";
 import { Channel } from "@/types/channel";
 import { Video, Rank, VideoCommon } from "@/types/video.ts";
@@ -82,14 +80,14 @@ import { Video, Rank, VideoCommon } from "@/types/video.ts";
 import VideoCard from "@/components/VideoCard.vue";
 import ChannelCard from "@/components/ChannelCard.vue";
 import BroadcasterCard from "@/components/BroadcasterCard.vue";
-import BroadcasterVideos from "@/components/BroadcasterVideos.vue";
+import ChannelVideos from "@/components/ChannelVideos.vue";
 
 @Component({
   components: {
     VideoCard,
     ChannelCard,
+    ChannelVideos,
     BroadcasterCard,
-    BroadcasterVideos,
   },
 })
 export default class CommonCardList extends Vue {

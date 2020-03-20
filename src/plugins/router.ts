@@ -15,11 +15,11 @@ const routes = [
   },
   {
     path: '/channels',
-    component: () => import('@/views/ChannelList.vue'),
+    component: () => import('@/views/Channels.vue'),
   },
   {
     path: '/broadcasters',
-    component: () => import('@/views/BroadcasterList.vue'),
+    component: () => import('@/views/Broadcasters.vue'),
   },
   {
     path: '/about',
