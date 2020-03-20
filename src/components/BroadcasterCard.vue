@@ -7,12 +7,17 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <v-list-item-title> {{ broadcaster.name }}</v-list-item-title>
-          <v-list-item-subtitle>
+          <v-list-item-title>
+            {{ broadcaster.name }}
             <v-btn @click.stop="" icon :href="broadcaster.twitter | twitterUrl">
               <v-icon color="blue">mdi-twitter</v-icon>
             </v-btn>
+            <v-btn @click.stop="" icon :href="broadcaster.name | wikiUrl">
+              <v-icon>mdi-wikipedia</v-icon>
+            </v-btn>
+          </v-list-item-title>
 
+          <v-list-item-subtitle>
             <v-btn @click.stop="showChannelCardList(broadcaster.channel)" icon>
               <v-icon color="red">mdi-youtube</v-icon>
             </v-btn>
@@ -59,6 +64,9 @@ import moment from "moment";
     },
     twitterUrl: function(id: string) {
       return `https://twitter.com/${id}`;
+    },
+    wikiUrl: function(name: string) {
+      return `https://wikiwiki.jp/nijisanji/${name}`;
     },
   },
 })
