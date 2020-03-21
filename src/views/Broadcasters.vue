@@ -41,9 +41,9 @@
         </v-col>
       </v-row>
 
-      <v-bottom-sheet v-model="showChannelCard">
-        <ChannelCard v-if="showChannelCard" :channel="broadcaster.channel" :open="true" />
-        <ChannelCard v-if="showChannelCard && broadcaster.channel2" :channel="broadcaster.channel2" :open="true" />
+      <v-bottom-sheet v-if="showChannelCard" v-model="showChannelCard">
+        <ChannelCard :channel="broadcaster.channel" :open="true" />
+        <ChannelCard v-if="broadcaster.channel2" :channel="broadcaster.channel2" :open="true" />
       </v-bottom-sheet>
     </v-container>
   </div>
