@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar app clipped-left dense>
+    <v-app-bar app clipped-left dense hide-on-scroll>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="mr-12 align-center">
         <h1 class="title">にじさんじライブ新着</h1>
@@ -20,15 +20,15 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-subheader class="mt-4 grey--text text--darken-1">設定</v-subheader>
-        <v-list-item link @click.stop="clickChangeTheme()">
+        <v-subheader class="grey--text text--darken-1">設定</v-subheader>
+        <v-list-item dense link @click.stop="clickChangeTheme()">
           <v-list-item-action>
             <v-icon color="grey darken-1">mdi-theme-light-dark </v-icon>
           </v-list-item-action>
           <v-list-item-title class="grey--text text--darken-1">
             ナイトモード
           </v-list-item-title>
-          <v-switch v-model="$vuetify.theme.dark" primary @click.stop="clickChangeTheme()"> </v-switch>
+          <v-switch dense v-model="$vuetify.theme.dark" @click.stop="clickChangeTheme()" />
         </v-list-item>
 
         <v-subheader class="mt-4 grey--text text--darken-1">にじさんじライブ新着</v-subheader>
@@ -49,8 +49,15 @@
     </v-navigation-drawer>
 
     <v-content>
-      <router-view></router-view>
+      <router-view />
     </v-content>
+
+    <v-bottom-navigation v-if="$vuetify.breakpoint.xs || $vuetify.breakpoint.sm || $vuetify.breakpoint.md" app grow>
+      <v-btn v-for="page in pages" :key="page.text" :to="page.to" link>
+        <span>{{ page.text }}</span>
+        <v-icon>{{ page.icon }}</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
   </v-app>
 </template>
 

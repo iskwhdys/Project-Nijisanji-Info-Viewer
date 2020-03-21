@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card class="">
-      <v-list-item @click.stop="open = !open">
+      <v-list-item @click.stop="changeOpen">
         <v-list-item-avatar width="64px" height="64px" color="grey">
           <v-img :src="channel.id | channelThumbnailUrl"> </v-img>
         </v-list-item-avatar>
@@ -17,12 +17,12 @@
           </v-list-item-subtitle>
         </v-list-item-content>
         <v-icon>
-          {{ !open ? "mdi-chevron-down-circle-outline" : "mdi-chevron-up-circle-outline" }}
+          {{ !showVideos ? "mdi-chevron-down-circle-outline" : "mdi-chevron-up-circle-outline" }}
         </v-icon>
       </v-list-item>
     </v-card>
 
-    <ChannelVideos v-if="open" :channel="channel" />
+    <ChannelVideos v-if="showVideos" :channel="channel" />
   </div>
 </template>
 
@@ -48,8 +48,16 @@ import ChannelVideos from "@/components/ChannelVideos.vue";
     },
   },
 })
-export default class ChannelCardList extends Vue {
+export default class ChannelCard extends Vue {
   @Prop() private channel!: Channel;
-  @Prop() private open!: Boolean;
+  @Prop() private open!: boolean;
+
+  private showVideos: boolean = false;
+  created() {
+    this.showVideos = this.open;
+  }
+  changeOpen() {
+    this.showVideos = !this.showVideos;
+  }
 }
 </script>

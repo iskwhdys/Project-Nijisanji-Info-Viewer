@@ -19,13 +19,13 @@
       </v-row>
       <v-row dense v-if="loading">
         <v-col>
-          <v-progress-circular :size="50" indeterminate></v-progress-circular>
+          <v-progress-circular :size="50" indeterminate />
         </v-col>
       </v-row>
 
       <v-row dense>
         <v-col xs="12" :sm="gridMode" v-for="channel in channels" :key="channel.id">
-          <ChannelCard :channel="channel"></ChannelCard>
+          <ChannelCard :channel="channel" />
         </v-col>
       </v-row>
     </v-container>
@@ -34,10 +34,9 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import ChannelCard from "@/components/ChannelCard.vue";
-import { Channel } from "@/types/channel.ts";
 import ChannelService from "@/domain/ChannelService";
-
+import { Channel } from "@/types/channel.ts";
+import ChannelCard from "@/components/ChannelCard.vue";
 @Component({
   components: {
     ChannelCard,

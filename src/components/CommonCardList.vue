@@ -34,7 +34,7 @@
             </v-row>
           </v-container>
         </h3>
-        <v-divider></v-divider>
+        <v-divider />
       </v-col>
     </v-row>
 
@@ -59,8 +59,8 @@
           :broadcaster="broadcaster"
           :icon="'mdi-close'"
         />
-        <ChannelVideos :channel="broadcaster.channel"></ChannelVideos>
-        <ChannelVideos :channel="broadcaster.channel2" v-if="broadcaster.channel2"></ChannelVideos>
+        <ChannelVideos :channel="broadcaster.channel" />
+        <ChannelVideos :channel="broadcaster.channel2" v-if="broadcaster.channel2" />
       </div>
       <div v-if="showChannelCard && channel">
         <ChannelCard v-on:child-event="showChannelCard = !showChannelCard" :channel="channel" :open="true" />
