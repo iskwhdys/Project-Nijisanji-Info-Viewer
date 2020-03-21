@@ -40,7 +40,7 @@
           このサイトはにじさんじファンが運営している非公式のサイトです。<br />
           要望、不具合、その他の問い合わせは
           <a href="https://twitter.com/2j3j_live_com">@2j3j_live_com</a>
-          までお願いします。<br />
+          もしくは<a href="https://forms.gle/x9w9BBTuRRnmz2JB7">こちら</a>までお願いします。<br />
         </div>
       </div>
     </div>
@@ -50,7 +50,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 @Component({
-  components: {}
+  components: {},
 })
 export default class About extends Vue {}
 </script>

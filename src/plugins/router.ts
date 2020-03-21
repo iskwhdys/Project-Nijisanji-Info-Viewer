@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
+import Schedules from '@/views/Schedules.vue'
+import Channels from '@/views/Channels.vue'
+import Broadcasters from '@/views/Broadcasters.vue'
+import About from '@/views/About.vue'
 
 Vue.use(VueRouter)
 
@@ -8,6 +12,32 @@ const routes = [
   {
     path: '/',
     component: Home,
+  },
+  {
+    path: '/schedules',
+    component: Schedules,
+  },
+  {
+    path: '/channels',
+    component: Channels,
+  },
+  {
+    path: '/broadcasters',
+    component: Broadcasters,
+  },
+  {
+    path: '/about',
+    component: About,
+  },
+  {
+    path: '*',
+    redirect: "/",
+  },
+
+  /**
+  {
+    path: '/',
+    component: () => import('@/views/Home.vue'),
   },
   {
     path: '/schedules',
@@ -29,6 +59,7 @@ const routes = [
     path: '*',
     redirect: "/",
   },
+  */
 ]
 
 const router = new VueRouter({
