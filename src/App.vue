@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar app clipped-left dense hide-on-scroll>
+    <v-app-bar app clipped-left dense :hide-on-scroll="isShowBottomMenu">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="mr-12 align-center">
         <h1 class="title">にじさんじライブ新着</h1>
@@ -52,7 +52,7 @@
       <router-view />
     </v-content>
 
-    <v-bottom-navigation v-if="$vuetify.breakpoint.xs || $vuetify.breakpoint.sm || $vuetify.breakpoint.md" app grow>
+    <v-bottom-navigation v-if="isShowBottomMenu" app grow>
       <v-btn v-for="page in pages" :key="page.text" :to="page.to" link>
         <span>{{ page.text }}</span>
         <v-icon>{{ page.icon }}</v-icon>
@@ -82,6 +82,12 @@ export default {
       localStorage.setItem("DarkTheme", this.$vuetify.theme.dark ? "True" : "False");
     },
   },
+  computed: {
+    isShowBottomMenu: function() {
+      return this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.md;
+    },
+  },
+
   created() {
     if (localStorage.getItem("DarkTheme") == null) {
       localStorage.setItem("DarkTheme", "True");
