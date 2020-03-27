@@ -9,7 +9,15 @@
               <v-col class="px-0 py-1 d-flex align-center">
                 <v-icon :color="field.icon.color">{{ field.icon.name }}</v-icon>
                 {{ field.title }}
-                <v-btn fab x-small @click="reloadVideos(field)" :loading="field.reload.flag">
+                <v-btn
+                  fab
+                  x-small
+                  @click="
+                    reloadVideos(field);
+                    $ga.event('CommonCardList', 'Reload', field.id);
+                  "
+                  :loading="field.reload.flag"
+                >
                   <v-icon>
                     mdi-rotate-left
                   </v-icon>
@@ -26,6 +34,7 @@
                   @click="
                     filter.value = !filter.value;
                     filterChange(field.videos);
+                    $ga.event('CommonCardList', 'Filter', field.id);
                   "
                 >
                   <v-icon v-if="filter.value">mdi-check-bold</v-icon>
@@ -44,10 +53,15 @@
       </v-col>
 
       <v-col v-if="field.get" cols="12" align-items="center">
-        <v-btn block @click="getVideos(field)" :loading="field.get.flag">
-          <v-icon>
-            mdi-chevron-down-circle-outline
-          </v-icon>
+        <v-btn
+          block
+          @click="
+            getVideos(field);
+            $ga.event('CommonCardList', 'Load', field.id);
+          "
+          :loading="field.get.flag"
+        >
+          <v-icon> mdi-chevron-down-circle-outline </v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -72,6 +86,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Mixins } from "vue-property-decorator";
 import moment from "moment";
+import VueAnalytics from "vue-analytics";
 
 import VideoService from "@/domain/VideoService";
 import ChannelService from "@/domain/ChannelService";

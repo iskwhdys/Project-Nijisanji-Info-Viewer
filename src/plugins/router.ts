@@ -34,32 +34,32 @@ const routes = [
     redirect: "/",
   },
 
-  /**
-  {
-    path: '/',
-    component: () => import('@/views/Home.vue'),
-  },
-  {
-    path: '/schedules',
-    component: () => import('@/views/Schedules.vue'),
-  },
-  {
-    path: '/channels',
-    component: () => import('@/views/Channels.vue'),
-  },
-  {
-    path: '/broadcasters',
-    component: () => import('@/views/Broadcasters.vue'),
-  },
-  {
-    path: '/about',
-    component: () => import('@/views/About.vue'),
-  },
-  {
-    path: '*',
-    redirect: "/",
-  },
-  */
+
+  // {
+  //   path: '/',
+  //   component: () => import('@/views/Home.vue'),
+  // },
+  // {
+  //   path: '/schedules',
+  //   component: () => import('@/views/Schedules.vue'),
+  // },
+  // {
+  //   path: '/channels',
+  //   component: () => import('@/views/Channels.vue'),
+  // },
+  // {
+  //   path: '/broadcasters',
+  //   component: () => import('@/views/Broadcasters.vue'),
+  // },
+  // {
+  //   path: '/about',
+  //   component: () => import('@/views/About.vue'),
+  // },
+  // {
+  //   path: '*',
+  //   redirect: "/",
+  // },
+
 ]
 
 const router = new VueRouter({

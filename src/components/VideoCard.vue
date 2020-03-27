@@ -62,7 +62,11 @@ v-card-text {
 
 <template>
   <div style="position:relative">
-    <v-card :width="$vuetify.breakpoint.xs ? 144 : 176" :href="'https://www.youtube.com/watch?v=' + video.id">
+    <v-card
+      @click="$ga.event('VideoCard', 'Video', video.title)"
+      :width="$vuetify.breakpoint.xs ? 144 : 176"
+      :href="'https://www.youtube.com/watch?v=' + video.id"
+    >
       <div class="Card">
         <v-img
           :width="$vuetify.breakpoint.xs ? 144 : 176"
@@ -100,10 +104,16 @@ v-card-text {
         </div>
       </div>
     </v-card>
-    <div v-if="showIcon" @click.stop="showChannelCard()">
+    <div
+      v-if="showIcon"
+      @click.stop="
+        showChannelCard();
+        $ga.event('VideoCard', 'Icon', video.title);
+      "
+    >
       <v-img
         :class="$vuetify.breakpoint.xs ? 'Card-Channel-Icon-XS' : 'Card-Channel-Icon'"
-        :src="this.video.channelId | channelThumbnailUrl"
+        :src="video.channelId | channelThumbnailUrl"
       />
     </div>
   </div>
@@ -112,6 +122,7 @@ v-card-text {
 <script lang="ts">
 import { Component, Prop, Vue, Mixins } from "vue-property-decorator";
 import moment from "moment";
+import VueAnalytics from "vue-analytics";
 import { Video, Rank, VideoCommon } from "@/types/video.ts";
 import { Channel } from "@/types/channel.ts";
 import AppConfig from "@/domain/AppConfig";

@@ -83,7 +83,7 @@ export default {
     },
   },
   computed: {
-    isShowBottomMenu: function() {
+    isShowBottomMenu() {
       return this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.md;
     },
   },
