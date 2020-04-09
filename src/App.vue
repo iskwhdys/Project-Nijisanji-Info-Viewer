@@ -3,7 +3,7 @@
     <v-app-bar app clipped-left dense :hide-on-scroll="isShowBottomMenu">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="mr-12 align-center">
-        <h1 class="title">にじさんじライブ新着</h1>
+        <h1 class="title">{{ env.VUE_APP_TITLE }}</h1>
       </v-toolbar-title>
     </v-app-bar>
 
@@ -31,11 +31,11 @@
           <v-switch dense v-model="$vuetify.theme.dark" @click.stop="clickChangeTheme()" />
         </v-list-item>
 
-        <v-subheader class="mt-4 grey--text text--darken-1">にじさんじライブ新着</v-subheader>
+        <v-subheader class="mt-4 grey--text text--darken-1">{{ env.VUE_APP_TITLE }}</v-subheader>
         <v-list-item link to="/about">
           <v-list-item-title class="grey--text text--darken-1">このサイトについて</v-list-item-title>
         </v-list-item>
-        <v-list-item href="https://twitter.com/2j3j_live_com">
+        <v-list-item :href="env.VUE_APP_TWITTER_URL">
           <v-list-item-title class="grey--text text--darken-1">お問い合わせ(Twitter)</v-list-item-title>
         </v-list-item>
 
@@ -64,6 +64,7 @@
 <script>
 export default {
   data: () => ({
+    env: process.env,
     drawer: null,
     pages: [
       { icon: "mdi-home", text: "ホーム", to: "/" },
@@ -72,8 +73,8 @@ export default {
       { icon: "mdi-youtube-subscription", text: "チャンネル", to: "/channels" },
     ],
     links: [
-      { text: "にじさんじ公式", to: "http://nijisanji.ichikara.co.jp/" },
-      { text: "にじさんじ非公式wiki", to: "https://wikiwiki.jp/nijisanji/" },
+      { text: process.env.VUE_APP_OFFICIAL_WEB_SITE_NAME, to: process.env.VUE_APP_OFFICIAL_WEB_SITE_URL },
+      { text: process.env.VUE_APP_UNOFFICIAL_WIKI_NAME, to: process.env.VUE_APP_UNOFFICIAL_WIKI_URL },
     ],
   }),
   methods: {

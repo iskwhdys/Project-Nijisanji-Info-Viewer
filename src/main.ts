@@ -13,6 +13,6 @@ new Vue({
 }).$mount('#app')
 
 Vue.use(VueAnalytics, {
-  id: 'UA-156666381-1',
+  id: process.env.VUE_APP_GA_ID,
   router,
 });
