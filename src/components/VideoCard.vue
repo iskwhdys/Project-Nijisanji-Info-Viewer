@@ -93,9 +93,9 @@ v-card-text {
             <div>
               <div class="info-text">{{ video | generateStartTime }}</div>
               <span class="info-text">
-                <span>{{ video | genarateViews }}</span>
+                <span>{{ genarateViews(video) }}</span>
                 <span v-if="video.likes != 0">
-                  👍{{ video.likes }}
+                  👍{{ numberFormat(video.likes) }}
                   <span v-if="!($vuetify.breakpoint.xs && showIcon)"> ({{ video | getRating }}) </span>
                 </span>
               </span>
@@ -129,7 +129,7 @@ import AppConfig from "@/domain/AppConfig";
 
 @Component({
   components: {
-    VideoCard,
+    VideoCard
   },
   filters: {
     generateStartTime: function(video: Video) {
@@ -167,15 +167,6 @@ import AppConfig from "@/domain/AppConfig";
       }
     },
 
-    genarateViews: function(video: Video) {
-      if (video.fieldType == "live") {
-        const count = video.liveViews == null ? "取得中" : video.liveViews;
-        return `👤${count}`;
-      }
-      if (video.fieldType == "archive" || video.fieldType == "upload") return `▶${video.views}`;
-      return "";
-    },
-
     toLiveTime: function(startDate: Date) {
       const totalSec = moment(new Date()).diff(moment(startDate)) / 1000;
       const hour = Math.floor(Math.floor(totalSec / 60) / 60);
@@ -203,7 +194,7 @@ import AppConfig from "@/domain/AppConfig";
       const sum = video.likes * 5 + video.dislikes;
       const count = video.likes + video.dislikes;
       const rate = sum / count;
-      return rate.toFixed(2);
+      return rate.toFixed(1);
     },
 
     videoThumbnailMiniUrl: function(id: string) {
@@ -211,8 +202,8 @@ import AppConfig from "@/domain/AppConfig";
     },
     channelThumbnailUrl: function(id: string) {
       return `${AppConfig.apiUrl}/image/channel/${id}/thumbnail`;
-    },
-  },
+    }
+  }
 })
 export default class VideoCard extends Vue {
   @Prop() private video!: Video;
@@ -226,6 +217,20 @@ export default class VideoCard extends Vue {
     const color = VideoCommon.getRankColor(rank);
     if (color == "") return "";
     return "border: solid 2px" + color;
+  }
+
+  numberFormat(count: number) {
+    if (10000 > count) return count;
+    return (count / 10000).toFixed(1) + "万";
+  }
+
+  genarateViews(video: Video) {
+    if (video.fieldType == "live") {
+      if (video.liveViews == null) return "取得中";
+      return `👤${this.numberFormat(video.liveViews)}`;
+    }
+    if (video.fieldType == "archive" || video.fieldType == "upload") return `▶${this.numberFormat(video.views)}`;
+    return "";
   }
 }
 </script>
