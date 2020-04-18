@@ -21,11 +21,15 @@
           <span v-if="broadcaster.channel"> {{ broadcaster.channel.subscriberCount | toSubscribeText }} </span>
         </v-list-item-subtitle>
 
-        <v-list-item-subtitle v-if="broadcaster.youtube2">
-          <v-btn @click.stop icon :href="broadcaster.youtube2 | youtubelUrl">
+        <v-list-item-subtitle v-if="broadcaster.youtube2 || broadcaster.twitter2">
+          <v-btn v-if="broadcaster.twitter2" @click.stop icon :href="broadcaster.twitter2 | twitterUrl">
+            <v-icon color="blue">mdi-twitter</v-icon>
+          </v-btn>
+
+          <v-btn v-if="broadcaster.youtube2" @click.stop icon :href="broadcaster.youtube2 | youtubelUrl">
             <v-icon color="red">mdi-youtube</v-icon>
           </v-btn>
-          <span> {{ broadcaster.channel2.subscriberCount | toSubscribeText }} </span>
+          <span v-if="broadcaster.youtube2"> {{ broadcaster.channel2.subscriberCount | toSubscribeText }} </span>
         </v-list-item-subtitle>
       </v-list-item-content>
 

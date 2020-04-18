@@ -20,28 +20,28 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-subheader class="grey--text text--darken-1">設定</v-subheader>
+        <v-subheader>設定</v-subheader>
         <v-list-item dense link @click.stop="clickChangeTheme()">
           <v-list-item-action>
-            <v-icon color="grey darken-1">mdi-theme-light-dark </v-icon>
+            <v-icon>mdi-theme-light-dark </v-icon>
           </v-list-item-action>
-          <v-list-item-title class="grey--text text--darken-1">
+          <v-list-item-title>
             ナイトモード
           </v-list-item-title>
           <v-switch dense v-model="$vuetify.theme.dark" @click.stop="clickChangeTheme()" />
         </v-list-item>
 
-        <v-subheader class="mt-4 grey--text text--darken-1">{{ env.VUE_APP_TITLE }}</v-subheader>
+        <v-subheader class="mt-4 ">{{ env.VUE_APP_TITLE }}</v-subheader>
         <v-list-item link to="/about">
-          <v-list-item-title class="grey--text text--darken-1">このサイトについて</v-list-item-title>
+          <v-list-item-title>このサイトについて</v-list-item-title>
         </v-list-item>
         <v-list-item :href="env.VUE_APP_TWITTER_URL">
-          <v-list-item-title class="grey--text text--darken-1">お問い合わせ(Twitter)</v-list-item-title>
+          <v-list-item-title>お問い合わせ(Twitter)</v-list-item-title>
         </v-list-item>
 
-        <v-subheader class="mt-4 grey--text text--darken-1">外部リンク</v-subheader>
+        <v-subheader class="mt-4">外部リンク</v-subheader>
         <v-list-item v-for="page in links" :key="page.text" :href="page.to">
-          <v-list-item-title class="grey--text text--darken-1">
+          <v-list-item-title>
             {{ page.text }}
           </v-list-item-title>
         </v-list-item>

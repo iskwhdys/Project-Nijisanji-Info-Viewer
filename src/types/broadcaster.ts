@@ -6,6 +6,7 @@ export interface Broadcaster {
   kana: string;
   group: string;
   twitter: string;
+  twitter2: string;
   youtube: string;
   youtube2: string;
   startDate: Date;
