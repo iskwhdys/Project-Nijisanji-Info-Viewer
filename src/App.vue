@@ -3,7 +3,9 @@
     <v-app-bar app clipped-left dense :hide-on-scroll="isShowBottomMenu">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="mr-12 align-center">
-        <h1 class="title">{{ env.VUE_APP_TITLE }}</h1>
+        <h1 class="title">
+          {{ env.VUE_APP_TITLE }}
+        </h1>
       </v-toolbar-title>
     </v-app-bar>
 

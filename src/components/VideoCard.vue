@@ -17,18 +17,18 @@ v-card-text {
 }
 .Card-Channel-Icon {
   position: absolute;
-  left: 140px;
+  left: 135px;
   bottom: 5px;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
 }
 .Card-Channel-Icon-XS {
   position: absolute;
-  left: 108px;
+  left: 105px;
   bottom: 5px;
-  width: 30px;
-  height: 30px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
 }
 .Card-Thumbnail-Time {
