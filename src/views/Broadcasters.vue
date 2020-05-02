@@ -3,11 +3,25 @@
     <v-container style="max-width:1185px">
       <v-row dense>
         <v-col v-if="!this.$vuetify.breakpoint.xs">
-          <v-btn-toggle v-model="gridMode" rounded mandatory dense @change="changeGridMode">
+          <v-btn-toggle
+            v-model="gridMode"
+            rounded
+            mandatory
+            dense
+            @change="changeGridMode"
+          >
             <v-btn value="12"><v-icon>mdi-view-agenda-outline</v-icon> </v-btn>
             <v-btn value="6"> <v-icon>mdi-grid-large</v-icon> </v-btn>
             <v-btn value="4"> <v-icon>mdi-grid</v-icon> </v-btn>
           </v-btn-toggle>
+        </v-col>
+        <v-col>
+          <v-select
+            v-model="viewCount"
+            :items="['All', '50', '25']"
+            label="表示件数"
+            @change="changeViewCount"
+          ></v-select>
         </v-col>
         <v-col>
           <v-select
@@ -18,10 +32,28 @@
           ></v-select>
         </v-col>
         <v-col>
-          <v-btn-toggle v-model="sortMode" rounded mandatory dense @change="changeSortMode">
+          <v-btn-toggle
+            v-model="sortMode"
+            rounded
+            mandatory
+            dense
+            @change="changeSortMode"
+          >
             <v-btn value="1"><v-icon>mdi-sort-ascending</v-icon> </v-btn>
             <v-btn value="-1"> <v-icon>mdi-sort-descending</v-icon> </v-btn>
           </v-btn-toggle>
+        </v-col>
+      </v-row>
+
+      <v-row>
+        <v-col>
+          <v-pagination
+            v-model="pageNumber"
+            :length="pageLength"
+            next-icon="mdi-chevron-right"
+            prev-icon="mdi-chevron-left"
+            @input="changePage"
+          ></v-pagination>
         </v-col>
       </v-row>
 
@@ -32,7 +64,12 @@
       </v-row>
 
       <v-row dense>
-        <v-col xs="12" :sm="gridMode" v-for="broadcaster in broadcasters" :key="broadcaster.id">
+        <v-col
+          xs="12"
+          :sm="gridMode"
+          v-for="broadcaster in broadcasters"
+          :key="broadcaster.id"
+        >
           <BroadcasterCard
             :broadcaster="broadcaster"
             v-on:child-event="showChannelPanel"
@@ -41,9 +78,25 @@
         </v-col>
       </v-row>
 
+      <v-row>
+        <v-col>
+          <v-pagination
+            v-model="pageNumber"
+            :length="pageLength"
+            next-icon="mdi-chevron-right"
+            prev-icon="mdi-chevron-left"
+            @input="changePage"
+          ></v-pagination>
+        </v-col>
+      </v-row>
+
       <v-bottom-sheet v-if="showChannelCard" v-model="showChannelCard">
         <ChannelCard :channel="broadcaster.channel" :open="true" />
-        <ChannelCard v-if="broadcaster.channel2" :channel="broadcaster.channel2" :open="true" />
+        <ChannelCard
+          v-if="broadcaster.channel2"
+          :channel="broadcaster.channel2"
+          :open="true"
+        />
       </v-bottom-sheet>
     </v-container>
   </div>
@@ -72,6 +125,10 @@ export default class BroadcasterList extends Vue {
   sortKind: string = "";
   sortMode: string = "";
 
+  viewCount: string = "";
+  pageNumber: number = 1;
+  pageLength: number = 1;
+
   showChannelCard: Boolean = false;
   broadcaster!: Broadcaster;
 
@@ -84,10 +141,38 @@ export default class BroadcasterList extends Vue {
     this.loading = false;
   }
 
+  viewCountNumber(): number {
+    if (this.viewCount == "All") {
+      return 1000;
+    } else {
+      return Number(this.viewCount);
+    }
+  }
+
+  changePage() {
+    this.loading = true;
+
+    this.broadcasters.splice(0);
+    setTimeout(() => {
+      this.setData();
+      this.loading = false;
+    }, 1);
+  }
+
   setData() {
+    this.pageLength =
+      Math.floor(this.originBroadcaster.length / this.viewCountNumber()) + 1;
+
     this.broadcasters.splice(0);
 
-    this.originBroadcaster.sort(this.sort).forEach(d => {
+    const data = this.originBroadcaster
+      .sort(this.sort)
+      .slice(
+        (this.pageNumber - 1) * this.viewCountNumber(),
+        (this.pageNumber + 0) * this.viewCountNumber()
+      );
+
+    data.forEach((d) => {
       this.broadcasters.push(d);
     });
   }
@@ -103,7 +188,8 @@ export default class BroadcasterList extends Vue {
     var mode = false;
 
     if (this.sortKind == "名前") mode = a.kana > b.kana;
-    if (this.sortKind == "登録者数") mode = a.channel.subscriberCount > b.channel.subscriberCount;
+    if (this.sortKind == "登録者数")
+      mode = a.channel.subscriberCount > b.channel.subscriberCount;
     if (this.sortKind == "デビュー") mode = a.startDate > b.startDate;
     if (this.sortKind == "最新配信日") mode = a.kana > b.kana;
 
@@ -111,6 +197,19 @@ export default class BroadcasterList extends Vue {
   }
 
   initSetting() {
+    if (localStorage.getItem("BroadcasterViewCount") == null) {
+      if (
+        this.$vuetify.breakpoint.xs ||
+        this.$vuetify.breakpoint.sm ||
+        this.$vuetify.breakpoint.md
+      ) {
+        localStorage.setItem("BroadcasterViewCount", "25");
+      } else {
+        localStorage.setItem("BroadcasterViewCount", "All");
+      }
+    }
+    this.viewCount = localStorage.getItem("BroadcasterViewCount")!;
+
     if (localStorage.getItem("BroadcasterGridMode") == null) {
       localStorage.setItem("BroadcasterGridMode", "6");
     }
@@ -132,6 +231,11 @@ export default class BroadcasterList extends Vue {
   }
   changeSortKind() {
     localStorage.setItem("BroadcasterSortKind", this.sortKind);
+    this.setData();
+  }
+  changeViewCount() {
+    localStorage.setItem("BroadcasterViewCount", this.viewCount);
+    this.pageNumber = 1;
     this.setData();
   }
   changeSortMode() {

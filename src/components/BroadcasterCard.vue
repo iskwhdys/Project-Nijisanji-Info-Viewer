@@ -1,5 +1,5 @@
 <template>
-  <v-card class="">
+  <v-card >
     <v-list-item @click.stop="cardClick">
       <v-list-item-avatar width="64" height="64" color="white">
         <v-img :src="broadcaster.id | icomlUrl"> </v-img>

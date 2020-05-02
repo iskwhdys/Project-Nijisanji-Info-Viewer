@@ -55,6 +55,7 @@
       <v-col v-if="field.get" cols="12" align-items="center">
         <v-btn
           block
+          large
           @click="
             getVideos(field);
             $ga.event('CommonCardList', 'Load', field.id);

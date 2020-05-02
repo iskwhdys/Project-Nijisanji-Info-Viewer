@@ -1,39 +1,38 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '@/views/Home.vue'
-import Schedules from '@/views/Schedules.vue'
-import Channels from '@/views/Channels.vue'
-import Broadcasters from '@/views/Broadcasters.vue'
-import About from '@/views/About.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Home from "@/views/Home.vue";
+import Schedules from "@/views/Schedules.vue";
+import Channels from "@/views/Channels.vue";
+import Broadcasters from "@/views/Broadcasters.vue";
+import About from "@/views/About.vue";
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
+    path: "/",
     component: Home,
   },
   {
-    path: '/schedules',
+    path: "/schedules",
     component: Schedules,
   },
   {
-    path: '/channels',
+    path: "/channels",
     component: Channels,
   },
   {
-    path: '/broadcasters',
+    path: "/broadcasters",
     component: Broadcasters,
   },
   {
-    path: '/about',
+    path: "/about",
     component: About,
   },
   {
-    path: '*',
+    path: "*",
     redirect: "/",
   },
-
 
   // {
   //   path: '/',
@@ -59,13 +58,15 @@ const routes = [
   //   path: '*',
   //   redirect: "/",
   // },
-
-]
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+  scrollBehavior(to, from, savedPosition) {
+    return { x: 0, y: 0 };
+  },
+});
 
-export default router
+export default router;
