@@ -1,6 +1,6 @@
 <template>
   <v-app id="inspire">
-    <v-app-bar app clipped-left dense :hide-on-scroll="isShowBottomMenu">
+    <v-app-bar app clipped-left dense :collapse-on-scroll="isShowBottomMenu">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       <v-toolbar-title class="mr-12 align-center">
         <h1 class="title">
@@ -30,7 +30,11 @@
           <v-list-item-title>
             ナイトモード
           </v-list-item-title>
-          <v-switch dense v-model="$vuetify.theme.dark" @click.stop="clickChangeTheme()" />
+          <v-switch
+            dense
+            v-model="$vuetify.theme.dark"
+            @click.stop="clickChangeTheme()"
+          />
         </v-list-item>
 
         <v-subheader class="mt-4 ">{{ env.VUE_APP_TITLE }}</v-subheader>
@@ -75,19 +79,32 @@ export default {
       { icon: "mdi-youtube-subscription", text: "チャンネル", to: "/channels" },
     ],
     links: [
-      { text: process.env.VUE_APP_OFFICIAL_WEB_SITE_NAME, to: process.env.VUE_APP_OFFICIAL_WEB_SITE_URL },
-      { text: process.env.VUE_APP_UNOFFICIAL_WIKI_NAME, to: process.env.VUE_APP_UNOFFICIAL_WIKI_URL },
+      {
+        text: process.env.VUE_APP_OFFICIAL_WEB_SITE_NAME,
+        to: process.env.VUE_APP_OFFICIAL_WEB_SITE_URL,
+      },
+      {
+        text: process.env.VUE_APP_UNOFFICIAL_WIKI_NAME,
+        to: process.env.VUE_APP_UNOFFICIAL_WIKI_URL,
+      },
     ],
   }),
   methods: {
     clickChangeTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-      localStorage.setItem("DarkTheme", this.$vuetify.theme.dark ? "True" : "False");
+      localStorage.setItem(
+        "DarkTheme",
+        this.$vuetify.theme.dark ? "True" : "False"
+      );
     },
   },
   computed: {
     isShowBottomMenu() {
-      return this.$vuetify.breakpoint.xs || this.$vuetify.breakpoint.sm || this.$vuetify.breakpoint.md;
+      return (
+        this.$vuetify.breakpoint.xs ||
+        this.$vuetify.breakpoint.sm ||
+        this.$vuetify.breakpoint.md
+      );
     },
   },
 
