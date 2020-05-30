@@ -24,11 +24,12 @@
         <hr />
         <div class="my-2">
           <ul>
-            <li>ひと目で分かる配信中ライブ</li>
-            <li>ライバーごとのアーカイブに即アクセス</li>
-            <li>あらゆる端末で見やすいレイアウト</li>
-            <li>人気配信もコア配信も見つけやすい</li>
+            <li>広告なし</li>
             <li>にじさんじオンリー</li>
+            <li>ひと目で分かる配信中ライブ</li>
+            <li>ライバーの過去動画に即アクセス</li>
+            <li>あらゆる端末で見やすいレイアウト</li>
+            <li>人気配信もこれから期待の配信も見つけやすい</li>
           </ul>
         </div>
       </div>
@@ -40,7 +41,8 @@
           このサイトはにじさんじファンが運営している非公式のサイトです。<br />
           要望、不具合、その他の問い合わせは
           <a href="https://twitter.com/2j3j_live_com">@2j3j_live_com</a>
-          もしくは<a href="https://forms.gle/x9w9BBTuRRnmz2JB7">こちら</a>までお願いします。<br />
+          もしくは<a href="https://forms.gle/x9w9BBTuRRnmz2JB7">こちら</a
+          >までお願いします。<br />
         </div>
       </div>
     </div>

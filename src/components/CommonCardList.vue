@@ -18,9 +18,7 @@
                   "
                   :loading="field.reload.flag"
                 >
-                  <v-icon>
-                    mdi-rotate-left
-                  </v-icon>
+                  <v-icon>mdi-rotate-left</v-icon>
                 </v-btn>
               </v-col>
 
@@ -40,6 +38,26 @@
                   <v-icon v-if="filter.value">mdi-check-bold</v-icon>
                 </v-btn>
               </v-col>
+            </v-row>
+            <v-row>
+              <v-checkbox
+                v-if="field.autoReload"
+                class="my-0 py-0"
+                dense
+                v-model="enabledAutoReload"
+                label="ライブ自動更新(1分間隔)"
+                hide-details="false"
+              />
+              <v-progress-circular
+                class="mx-2"
+                color="primary"
+                size="24"
+                rotate="-90"
+                width="3"
+                v-if="enabledAutoReload"
+                :buffer-value="100"
+                :value="100 / RELOAD_TIME *  reloadCount"
+              />
             </v-row>
           </v-container>
         </h3>
@@ -62,7 +80,7 @@
           "
           :loading="field.get.flag"
         >
-          <v-icon> mdi-chevron-down-circle-outline </v-icon>
+          <v-icon>mdi-chevron-down-circle-outline</v-icon>
         </v-btn>
       </v-col>
     </v-row>
@@ -78,14 +96,18 @@
         <ChannelVideos :channel="broadcaster.channel2" v-if="broadcaster.channel2" />
       </div>
       <div v-if="showChannelCard && channel">
-        <ChannelCard v-on:child-event="showChannelCard = !showChannelCard" :channel="channel" :open="true" />
+        <ChannelCard
+          v-on:child-event="showChannelCard = !showChannelCard"
+          :channel="channel"
+          :open="true"
+        />
       </div>
     </v-bottom-sheet>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Mixins } from "vue-property-decorator";
+import { Component, Vue, Prop, Mixins, Watch } from "vue-property-decorator";
 import moment from "moment";
 import VueAnalytics from "vue-analytics";
 
@@ -107,8 +129,8 @@ import ChannelVideos from "@/components/ChannelVideos.vue";
     VideoCard,
     ChannelCard,
     ChannelVideos,
-    BroadcasterCard,
-  },
+    BroadcasterCard
+  }
 })
 export default class CommonCardList extends Vue {
   @Prop() private field!: any;
@@ -117,11 +139,16 @@ export default class CommonCardList extends Vue {
   broadcaster: Broadcaster | null = null;
   channel: Channel | null = null;
 
+  enabledAutoReload: Boolean = false;
+  reloadCount: number = -1;
+  timerId: number = -1;
+  readonly RELOAD_TIME: number = 60;
+
   filters = [
     { value: true, key: Rank.none },
     { value: true, key: Rank.low },
     { value: true, key: Rank.middle },
-    { value: true, key: Rank.high },
+    { value: true, key: Rank.high }
   ];
 
   getRankColor(rank: Rank) {
@@ -132,10 +159,30 @@ export default class CommonCardList extends Vue {
     this.reloadVideos(this.field);
   }
 
+  @Watch("enabledAutoReload")
+  changeAutoReload() {
+    this.$ga.event("CommonCardList", "Timer", this.enabledAutoReload + "");
+    if (this.enabledAutoReload) {
+      this.reloadCount = this.RELOAD_TIME;
+      this.timerId = setInterval(this.decrementReloadCount, 500);
+    } else {
+      clearInterval(this.timerId);
+    }
+  }
+  decrementReloadCount() {
+    this.reloadCount = this.reloadCount - 0.5;
+    if (this.reloadCount < 0) {
+      this.reloadCount = this.RELOAD_TIME;
+      this.reloadVideos(this.field);
+    }
+  }
+
   async showChannelPanel(video: Video) {
     if (this.showChannelCard == false) {
       try {
-        this.broadcaster = await BroadcasterService.getFromChannel(video.channelId);
+        this.broadcaster = await BroadcasterService.getFromChannel(
+          video.channelId
+        );
         this.channel = null;
       } catch (error) {
         this.channel = await ChannelService.get(video.channelId);
@@ -150,7 +197,10 @@ export default class CommonCardList extends Vue {
     field.reload.flag = true;
 
     field.videos.splice(0, field.videos.length);
-    const data: Video[] = await VideoService.getFieldVideo(field.id, field.reload.id);
+    const data: Video[] = await VideoService.getFieldVideo(
+      field.id,
+      field.reload.id
+    );
     data.forEach(d => field.videos.push(d));
     this.filterChange(field.videos);
 
@@ -168,7 +218,11 @@ export default class CommonCardList extends Vue {
         : lastVideo.liveSchedule;
     const from = moment(date).format("YYYY-MM-DD HH:mm:ss");
 
-    const videos: Video[] = await VideoService.getFieldVideoFrom(field.id, field.get.id, from);
+    const videos: Video[] = await VideoService.getFieldVideoFrom(
+      field.id,
+      field.get.id,
+      from
+    );
     videos.forEach(d => field.videos.push(d));
     this.filterChange(field.videos);
 
