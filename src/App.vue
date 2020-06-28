@@ -7,12 +7,12 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
-        icon
         @click="$ga.event('AppBar', 'Home', 'Tweet');"
         :href="`https://twitter.com/share?url=https://nijisanji-live.com/&text=「にじさんじライブ新着」で、にじさんじライバーの配信中ライブ・アーカイブ・予約などをひと目で確認！`"
         target="_blank"
         rel="noopener noreferrer"
       >
+        <template v-if="!$vuetify.breakpoint.xs">共有</template>
         <v-icon color="blue">mdi-twitter</v-icon>
       </v-btn>
     </v-app-bar>
@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import WebStorage from "@/domain/WebStorage";
+
 export default {
   data: () => ({
     env: process.env,
@@ -90,10 +92,7 @@ export default {
   methods: {
     clickChangeTheme() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
-      localStorage.setItem(
-        "DarkTheme",
-        this.$vuetify.theme.dark ? "True" : "False"
-      );
+      WebStorage.darkTheme = this.$vuetify.theme.dark;
     },
 
     clickTweet() {}
@@ -109,10 +108,7 @@ export default {
   },
 
   created() {
-    if (localStorage.getItem("DarkTheme") == null) {
-      localStorage.setItem("DarkTheme", "True");
-    }
-    this.$vuetify.theme.dark = localStorage.getItem("DarkTheme") == "True";
+    this.$vuetify.theme.dark = WebStorage.darkTheme;
   }
 };
 </script>

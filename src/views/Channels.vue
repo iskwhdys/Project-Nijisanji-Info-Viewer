@@ -11,9 +11,15 @@
             dense
             @change="changeGridMode"
           >
-            <v-btn value="12"><v-icon>mdi-view-agenda-outline</v-icon> </v-btn>
-            <v-btn value="6"> <v-icon>mdi-grid-large</v-icon> </v-btn>
-            <v-btn value="4"> <v-icon>mdi-grid</v-icon> </v-btn>
+            <v-btn value="12">
+              <v-icon>mdi-view-agenda-outline</v-icon>
+            </v-btn>
+            <v-btn value="6">
+              <v-icon>mdi-grid-large</v-icon>
+            </v-btn>
+            <v-btn value="4">
+              <v-icon>mdi-grid</v-icon>
+            </v-btn>
           </v-btn-toggle>
         </v-col>
       </v-row>
@@ -37,10 +43,12 @@ import { Component, Vue } from "vue-property-decorator";
 import ChannelService from "@/domain/ChannelService";
 import { Channel } from "@/types/channel.ts";
 import ChannelCard from "@/components/ChannelCard.vue";
+import WebStorage from "@/domain/WebStorage";
+
 @Component({
   components: {
-    ChannelCard,
-  },
+    ChannelCard
+  }
 })
 export default class ChannelList extends Vue {
   channels: Channel[] = [];
@@ -48,10 +56,7 @@ export default class ChannelList extends Vue {
   gridMode: string = "";
 
   async created() {
-    if (localStorage.getItem("ChannelGrid") == null) {
-      localStorage.setItem("ChannelGrid", "6");
-    }
-    this.gridMode = localStorage.getItem("ChannelGrid")!;
+    this.gridMode = WebStorage.channelGrid;
 
     const data: Channel[] = await ChannelService.getAllChannel();
     data.forEach(d => {
@@ -62,7 +67,7 @@ export default class ChannelList extends Vue {
   }
 
   changeGridMode() {
-    localStorage.setItem("ChannelGrid", this.gridMode);
+    WebStorage.channelGrid = this.gridMode;
   }
 }
 </script>

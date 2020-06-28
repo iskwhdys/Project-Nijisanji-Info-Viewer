@@ -3,16 +3,16 @@
     <v-container style="max-width:1185px">
       <v-row dense>
         <v-col v-if="!this.$vuetify.breakpoint.xs">
-          <v-btn-toggle
-            v-model="gridMode"
-            rounded
-            mandatory
-            dense
-            @change="changeGridMode"
-          >
-            <v-btn value="12"><v-icon>mdi-view-agenda-outline</v-icon> </v-btn>
-            <v-btn value="6"> <v-icon>mdi-grid-large</v-icon> </v-btn>
-            <v-btn value="4"> <v-icon>mdi-grid</v-icon> </v-btn>
+          <v-btn-toggle v-model="gridMode" rounded mandatory dense @change="changeGridMode">
+            <v-btn value="12">
+              <v-icon>mdi-view-agenda-outline</v-icon>
+            </v-btn>
+            <v-btn value="6">
+              <v-icon>mdi-grid-large</v-icon>
+            </v-btn>
+            <v-btn value="4">
+              <v-icon>mdi-grid</v-icon>
+            </v-btn>
           </v-btn-toggle>
         </v-col>
         <v-col>
@@ -32,15 +32,13 @@
           ></v-select>
         </v-col>
         <v-col>
-          <v-btn-toggle
-            v-model="sortMode"
-            rounded
-            mandatory
-            dense
-            @change="changeSortMode"
-          >
-            <v-btn value="1"><v-icon>mdi-sort-ascending</v-icon> </v-btn>
-            <v-btn value="-1"> <v-icon>mdi-sort-descending</v-icon> </v-btn>
+          <v-btn-toggle v-model="sortMode" rounded mandatory dense @change="changeSortMode">
+            <v-btn value="1">
+              <v-icon>mdi-sort-ascending</v-icon>
+            </v-btn>
+            <v-btn value="-1">
+              <v-icon>mdi-sort-descending</v-icon>
+            </v-btn>
           </v-btn-toggle>
         </v-col>
       </v-row>
@@ -64,12 +62,7 @@
       </v-row>
 
       <v-row dense>
-        <v-col
-          xs="12"
-          :sm="gridMode"
-          v-for="broadcaster in broadcasters"
-          :key="broadcaster.id"
-        >
+        <v-col xs="12" :sm="gridMode" v-for="broadcaster in broadcasters" :key="broadcaster.id">
           <BroadcasterCard
             :broadcaster="broadcaster"
             v-on:child-event="showChannelPanel"
@@ -92,11 +85,7 @@
 
       <v-bottom-sheet v-if="showChannelCard" v-model="showChannelCard">
         <ChannelCard :channel="broadcaster.channel" :open="true" />
-        <ChannelCard
-          v-if="broadcaster.channel2"
-          :channel="broadcaster.channel2"
-          :open="true"
-        />
+        <ChannelCard v-if="broadcaster.channel2" :channel="broadcaster.channel2" :open="true" />
       </v-bottom-sheet>
     </v-container>
   </div>
@@ -109,12 +98,13 @@ import { Broadcaster } from "@/types/broadcaster.ts";
 
 import BroadcasterCard from "@/components/BroadcasterCard.vue";
 import ChannelCard from "@/components/ChannelCard.vue";
+import WebStorage from "@/domain/WebStorage";
 
 @Component({
   components: {
     BroadcasterCard,
-    ChannelCard,
-  },
+    ChannelCard
+  }
 })
 export default class BroadcasterList extends Vue {
   broadcasters: Broadcaster[] = [];
@@ -172,7 +162,7 @@ export default class BroadcasterList extends Vue {
         (this.pageNumber + 0) * this.viewCountNumber()
       );
 
-    data.forEach((d) => {
+    data.forEach(d => {
       this.broadcasters.push(d);
     });
   }
@@ -197,49 +187,37 @@ export default class BroadcasterList extends Vue {
   }
 
   initSetting() {
-    if (localStorage.getItem("BroadcasterViewCount") == null) {
+    if (WebStorage.broadcasterViewCount == "") {
       if (
         this.$vuetify.breakpoint.xs ||
         this.$vuetify.breakpoint.sm ||
         this.$vuetify.breakpoint.md
       ) {
-        localStorage.setItem("BroadcasterViewCount", "25");
+        WebStorage.broadcasterViewCount = "25";
       } else {
-        localStorage.setItem("BroadcasterViewCount", "All");
+        WebStorage.broadcasterViewCount = "All";
       }
     }
-    this.viewCount = localStorage.getItem("BroadcasterViewCount")!;
-
-    if (localStorage.getItem("BroadcasterGridMode") == null) {
-      localStorage.setItem("BroadcasterGridMode", "6");
-    }
-    this.gridMode = localStorage.getItem("BroadcasterGridMode")!;
-
-    if (localStorage.getItem("BroadcasterSortKind") == null) {
-      localStorage.setItem("BroadcasterSortKind", "登録者数");
-    }
-    this.sortKind = localStorage.getItem("BroadcasterSortKind")!;
-
-    if (localStorage.getItem("BroadcasterSortMode") == null) {
-      localStorage.setItem("BroadcasterSortMode", "-1");
-    }
-    this.sortMode = localStorage.getItem("BroadcasterSortMode")!;
+    this.viewCount = WebStorage.broadcasterViewCount;
+    this.gridMode = WebStorage.broadcasterGridMode;
+    this.sortKind = WebStorage.broadcasterSortKind;
+    this.sortMode = WebStorage.broadcasterSortMode;
   }
 
   changeGridMode() {
-    localStorage.setItem("BroadcasterGridMode", this.gridMode);
+    WebStorage.broadcasterGridMode = this.gridMode;
   }
   changeSortKind() {
-    localStorage.setItem("BroadcasterSortKind", this.sortKind);
+    WebStorage.broadcasterSortKind = this.sortKind;
     this.setData();
   }
   changeViewCount() {
-    localStorage.setItem("BroadcasterViewCount", this.viewCount);
+    WebStorage.broadcasterViewCount = this.viewCount;
     this.pageNumber = 1;
     this.setData();
   }
   changeSortMode() {
-    localStorage.setItem("BroadcasterSortMode", this.sortMode);
+    WebStorage.broadcasterSortMode = this.sortMode;
     this.setData();
   }
 }

@@ -114,6 +114,7 @@ import VueAnalytics from "vue-analytics";
 import VideoService from "@/domain/VideoService";
 import ChannelService from "@/domain/ChannelService";
 import BroadcasterService from "@/domain/BroadcasterService";
+import WebStorage from "@/domain/WebStorage";
 
 import { Broadcaster } from "@/types/broadcaster";
 import { Channel } from "@/types/channel";
@@ -135,11 +136,11 @@ import ChannelVideos from "@/components/ChannelVideos.vue";
 export default class CommonCardList extends Vue {
   @Prop() private field!: any;
 
-  showChannelCard: Boolean = false;
+  showChannelCard: boolean = false;
   broadcaster: Broadcaster | null = null;
   channel: Channel | null = null;
 
-  enabledAutoReload: Boolean = false;
+  enabledAutoReload: boolean = false;
   reloadCount: number = -1;
   timerId: number = -1;
   readonly RELOAD_TIME: number = 60;
@@ -157,23 +158,31 @@ export default class CommonCardList extends Vue {
 
   async created() {
     this.reloadVideos(this.field);
+    if (this.field.autoReload) {
+      this.enabledAutoReload = WebStorage.enabledAutoReload;
+    }
   }
 
   @Watch("enabledAutoReload")
   changeAutoReload() {
-    this.$ga.event("CommonCardList", "Timer", this.enabledAutoReload + "");
     if (this.enabledAutoReload) {
       this.reloadCount = this.RELOAD_TIME;
       this.timerId = setInterval(this.decrementReloadCount, 500);
+      if (!this.field.reload.flag) {
+        this.reloadVideos(this.field);
+      }
     } else {
       clearInterval(this.timerId);
     }
+    WebStorage.enabledAutoReload = this.enabledAutoReload;
+    this.$ga.event("CommonCardList", "Timer", this.enabledAutoReload + "");
   }
   decrementReloadCount() {
     this.reloadCount = this.reloadCount - 0.5;
     if (this.reloadCount < 0) {
       this.reloadCount = this.RELOAD_TIME;
       this.reloadVideos(this.field);
+      this.$ga.event("CommonCardList", "Timer", "TimerReload");
     }
   }
 
@@ -195,37 +204,42 @@ export default class CommonCardList extends Vue {
 
   async reloadVideos(field: any) {
     field.reload.flag = true;
-
-    field.videos.splice(0, field.videos.length);
-    const data: Video[] = await VideoService.getFieldVideo(
-      field.id,
-      field.reload.id
-    );
-    data.forEach(d => field.videos.push(d));
-    this.filterChange(field.videos);
-
+    try {
+      field.videos.splice(0, field.videos.length);
+      const data: Video[] = await VideoService.getFieldVideo(
+        field.id,
+        field.reload.id
+      );
+      data.forEach(d => field.videos.push(d));
+      this.filterChange(field.videos);
+    } catch (error) {
+      //
+    }
     field.reload.flag = false;
   }
 
   async getVideos(field: any) {
     field.get.flag = true;
-    const lastVideo = field.videos[field.videos.length - 1];
-    const date =
-      field.id == "upload"
-        ? lastVideo.uploadDate
-        : field.id == "live" || field.id == "archive"
-        ? lastVideo.liveStart
-        : lastVideo.liveSchedule;
-    const from = moment(date).format("YYYY-MM-DD HH:mm:ss");
+    try {
+      const lastVideo = field.videos[field.videos.length - 1];
+      const date =
+        field.id == "upload"
+          ? lastVideo.uploadDate
+          : field.id == "live" || field.id == "archive"
+          ? lastVideo.liveStart
+          : lastVideo.liveSchedule;
+      const from = moment(date).format("YYYY-MM-DD HH:mm:ss");
 
-    const videos: Video[] = await VideoService.getFieldVideoFrom(
-      field.id,
-      field.get.id,
-      from
-    );
-    videos.forEach(d => field.videos.push(d));
-    this.filterChange(field.videos);
-
+      const videos: Video[] = await VideoService.getFieldVideoFrom(
+        field.id,
+        field.get.id,
+        from
+      );
+      videos.forEach(d => field.videos.push(d));
+      this.filterChange(field.videos);
+    } catch (error) {
+      //
+    }
     field.get.flag = false;
   }
 
