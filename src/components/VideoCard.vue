@@ -66,6 +66,7 @@ v-card-text {
       @click="$ga.event('VideoCard', 'Video', video.title)"
       :width="$vuetify.breakpoint.xs ? 144 : 176"
       :href="'https://www.youtube.com/watch?v=' + video.id"
+      :ripple="false"
     >
       <div class="Card">
         <v-img
@@ -73,15 +74,14 @@ v-card-text {
           :height="$vuetify.breakpoint.xs ? 80 : 98"
           :src="this.video.id | videoThumbnailMiniUrl"
         >
-          <span v-if="video.fieldType == 'live'" class="Card-Thumbnail-Time Card-Thumbnail-Total">
-            {{ video.liveStart | toLiveTime }}
-          </span>
+          <span
+            v-if="video.fieldType == 'live'"
+            class="Card-Thumbnail-Time Card-Thumbnail-Total"
+          >{{ video.liveStart | toLiveTime }}</span>
           <span
             v-else-if="video.fieldType == 'upload' || video.fieldType == 'archive' || video.fieldType == 'premier'"
             class="Card-Thumbnail-Time Card-Thumbnail-Duration"
-          >
-            {{ video.duration | toTime }}
-          </span>
+          >{{ video.duration | toTime }}</span>
         </v-img>
 
         <div style="position:relative">
@@ -96,7 +96,9 @@ v-card-text {
                 <span>{{ genarateViews(video) }}</span>
                 <span v-if="video.likes != 0">
                   👍{{ numberFormat(video.likes) }}
-                  <span v-if="!($vuetify.breakpoint.xs && showIcon)"> ({{ video | getRating }}) </span>
+                  <span
+                    v-if="!($vuetify.breakpoint.xs && showIcon)"
+                  >({{ video | getRating }})</span>
                 </span>
               </span>
             </div>
@@ -129,10 +131,10 @@ import AppConfig from "@/domain/AppConfig";
 
 @Component({
   components: {
-    VideoCard
+    VideoCard,
   },
   filters: {
-    generateStartTime: function(video: Video) {
+    generateStartTime: function (video: Video) {
       const type = video.fieldType;
       const startDate =
         type == "live" || type == "archive"
@@ -142,11 +144,22 @@ import AppConfig from "@/domain/AppConfig";
           : video.liveSchedule;
 
       const start = moment(startDate).format("YYYY/MM/DD");
-      const yesterday = moment(new Date().setDate(new Date().getDate() - 1)).format("YYYY/MM/DD");
+      const yesterday = moment(
+        new Date().setDate(new Date().getDate() - 1)
+      ).format("YYYY/MM/DD");
       const today = moment(new Date()).format("YYYY/MM/DD");
-      const tomorrow = moment(new Date().setDate(new Date().getDate() + 1)).format("YYYY/MM/DD");
+      const tomorrow = moment(
+        new Date().setDate(new Date().getDate() + 1)
+      ).format("YYYY/MM/DD");
 
-      const prefix = start == yesterday ? "昨日" : start == today ? "今日" : start == tomorrow ? "明日" : "";
+      const prefix =
+        start == yesterday
+          ? "昨日"
+          : start == today
+          ? "今日"
+          : start == tomorrow
+          ? "明日"
+          : "";
       const suffix =
         type == "live" || type == "archive"
           ? "～"
@@ -167,7 +180,7 @@ import AppConfig from "@/domain/AppConfig";
       }
     },
 
-    toLiveTime: function(startDate: Date) {
+    toLiveTime: function (startDate: Date) {
       const totalSec = moment(new Date()).diff(moment(startDate)) / 1000;
       const hour = Math.floor(Math.floor(totalSec / 60) / 60);
       const min = Math.floor((totalSec - hour * 60 * 60) / 60);
@@ -182,28 +195,31 @@ import AppConfig from "@/domain/AppConfig";
       }
     },
 
-    toTime: function(totalSec: number) {
+    toTime: function (totalSec: number) {
       const hour = Math.floor(Math.floor(totalSec / 60) / 60);
       const min = Math.floor((totalSec - hour * 60 * 60) / 60);
       const sec = totalSec - hour * 60 * 60 - min * 60;
-      const text = (hour > 0 ? hour + ":" : "") + (min >= 0 ? ("0" + min).slice(-2) + ":" : "") + ("0" + sec).slice(-2);
+      const text =
+        (hour > 0 ? hour + ":" : "") +
+        (min >= 0 ? ("0" + min).slice(-2) + ":" : "") +
+        ("0" + sec).slice(-2);
       return text;
     },
 
-    getRating: function(video: Video) {
+    getRating: function (video: Video) {
       const sum = video.likes * 5 + video.dislikes;
       const count = video.likes + video.dislikes;
       const rate = sum / count;
       return rate.toFixed(1);
     },
 
-    videoThumbnailMiniUrl: function(id: string) {
+    videoThumbnailMiniUrl: function (id: string) {
       return `${AppConfig.apiUrl}/image/video/${id}/thumbnail_mini`;
     },
-    channelThumbnailUrl: function(id: string) {
+    channelThumbnailUrl: function (id: string) {
       return `${AppConfig.apiUrl}/image/channel/${id}/thumbnail`;
-    }
-  }
+    },
+  },
 })
 export default class VideoCard extends Vue {
   @Prop() private video!: Video;
@@ -226,10 +242,11 @@ export default class VideoCard extends Vue {
 
   genarateViews(video: Video) {
     if (video.fieldType == "live") {
-      if (video.liveViews == null) return "取得中";
+      if (video.liveViews == null) return "👤取得中";
       return `👤${this.numberFormat(video.liveViews)}`;
     }
-    if (video.fieldType == "archive" || video.fieldType == "upload") return `▶${this.numberFormat(video.views)}`;
+    if (video.fieldType == "archive" || video.fieldType == "upload")
+      return `▶${this.numberFormat(video.views)}`;
     return "";
   }
 }

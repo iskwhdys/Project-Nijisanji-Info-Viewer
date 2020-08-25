@@ -13,6 +13,10 @@ export class AppConfig {
     // 開発用-ローカル
     //return "http://192.168.11.7:8090/api";
   }
+
+  public get isMaintenance(): boolean {
+    return process.env.NODE_ENV == 'development';
+  }
 }
 
 export default AppConfig.instance;

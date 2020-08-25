@@ -7,6 +7,13 @@ export class WebStorage {
     return this.INSTANCE;
   }
 
+  public get filterArk(): boolean {
+    return this.getBoolean("filterArk", false);
+  }
+  public set filterArk(value: boolean) {
+    this.setBoolean("filterArk", value);
+  }
+
   public get enabledAutoReload(): boolean {
     return this.getBoolean("enabledAutoReload", false);
   }

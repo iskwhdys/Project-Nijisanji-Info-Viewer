@@ -58,6 +58,13 @@
                 :buffer-value="100"
                 :value="100 / RELOAD_TIME *  reloadCount"
               />
+              <v-checkbox
+                class="my-0 py-0"
+                dense
+                v-model="filterArk"
+                label="ARKを除外"
+                hide-details="false"
+              />
             </v-row>
           </v-container>
         </h3>
@@ -130,8 +137,8 @@ import ChannelVideos from "@/components/ChannelVideos.vue";
     VideoCard,
     ChannelCard,
     ChannelVideos,
-    BroadcasterCard
-  }
+    BroadcasterCard,
+  },
 })
 export default class CommonCardList extends Vue {
   @Prop() private field!: any;
@@ -140,6 +147,7 @@ export default class CommonCardList extends Vue {
   broadcaster: Broadcaster | null = null;
   channel: Channel | null = null;
 
+  filterArk: boolean = false;
   enabledAutoReload: boolean = false;
   reloadCount: number = -1;
   timerId: number = -1;
@@ -149,7 +157,7 @@ export default class CommonCardList extends Vue {
     { value: true, key: Rank.none },
     { value: true, key: Rank.low },
     { value: true, key: Rank.middle },
-    { value: true, key: Rank.high }
+    { value: true, key: Rank.high },
   ];
 
   getRankColor(rank: Rank) {
@@ -161,6 +169,15 @@ export default class CommonCardList extends Vue {
     if (this.field.autoReload) {
       this.enabledAutoReload = WebStorage.enabledAutoReload;
     }
+
+    this.filterArk = WebStorage.filterArk;
+  }
+
+  @Watch("filterArk")
+  changeFilterArk() {
+    this.filterChange(this.field.videos);
+    WebStorage.filterArk = this.filterArk;
+    this.$ga.event("CommonCardList", "FilterARK", this.filterArk + "");
   }
 
   @Watch("enabledAutoReload")
@@ -210,7 +227,7 @@ export default class CommonCardList extends Vue {
         field.id,
         field.reload.id
       );
-      data.forEach(d => field.videos.push(d));
+      data.forEach((d) => field.videos.push(d));
       this.filterChange(field.videos);
     } catch (error) {
       //
@@ -235,7 +252,7 @@ export default class CommonCardList extends Vue {
         field.get.id,
         from
       );
-      videos.forEach(d => field.videos.push(d));
+      videos.forEach((d) => field.videos.push(d));
       this.filterChange(field.videos);
     } catch (error) {
       //
@@ -247,7 +264,13 @@ export default class CommonCardList extends Vue {
 
   filterChange(videos: Video[]) {
     this.filterVideos.splice(0, this.filterVideos.length);
-    videos.forEach(d => {
+    videos.forEach((d) => {
+      if (this.filterArk) {
+        if (d.title.includes("ARK")) {
+          return;
+        }
+      }
+
       if (this.filters[d.rank].value) {
         this.filterVideos.push(d);
       }
