@@ -13,6 +13,7 @@
                   fab
                   x-small
                   @click="
+                    filterVideos.splice(0, filterVideos.length);
                     reloadVideos(field);
                     $ga.event('CommonCardList', 'Reload', field.id);
                   "
@@ -223,7 +224,6 @@ export default class CommonCardList extends Vue {
   async reloadVideos(field: any) {
     field.reload.flag = true;
     try {
-      this.filterVideos.splice(0, this.filterVideos.length);
       field.videos.splice(0, field.videos.length);
       const data: Video[] = await VideoService.getFieldVideo(
         field.id,
