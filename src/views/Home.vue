@@ -34,7 +34,7 @@ export default class Home extends Vue {
       id: "upload",
       title: "新着動画",
       icon: { name: "mdi-youtube-tv" },
-      get: { id: "get", flag: false, count: 10 },
+      get: { id: "get", flag: false, count: 20 },
       reload: { id: "new", flag: false },
       videos: [],
       filter: true
@@ -43,7 +43,7 @@ export default class Home extends Vue {
       id: "archive",
       title: "アーカイブ",
       icon: { name: "mdi-play-box-multiple" },
-      get: { id: "get", flag: false, count: 30 },
+      get: { id: "get", flag: false, count: 90 },
       reload: { id: "new", flag: false },
       videos: [],
       filter: true

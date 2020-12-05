@@ -75,11 +75,11 @@ v-card-text {
           :src="this.video.id | videoThumbnailMiniUrl"
         >
           <span
-            v-if="video.fieldType == 'live'"
+            v-if="video.type == 'live' && video.status == 'stream'"
             class="Card-Thumbnail-Time Card-Thumbnail-Total"
           >{{ video.liveStart | toLiveTime }}</span>
           <span
-            v-else-if="video.fieldType == 'upload' || video.fieldType == 'archive' || video.fieldType == 'premier'"
+            v-else-if="!(video.type == 'live' && video.status == 'reserve')"
             class="Card-Thumbnail-Time Card-Thumbnail-Duration"
           >{{ video.duration | toTime }}</span>
         </v-img>
@@ -115,7 +115,7 @@ v-card-text {
     >
       <v-img
         :class="$vuetify.breakpoint.xs ? 'Card-Channel-Icon-XS' : 'Card-Channel-Icon'"
-        :src="video.channelId | channelThumbnailUrl"
+        :src="video.channel | channelThumbnailUrl"
       />
     </div>
   </div>
@@ -135,11 +135,9 @@ import AppConfig from "@/domain/AppConfig";
   },
   filters: {
     generateStartTime: function (video: Video) {
-      const type = video.fieldType;
       const startDate =
-        type == "live" || type == "archive"
-          ? video.liveStart
-          : type == "upload"
+         video.type  == "live" && video.status  != "reserve"  ? video.liveStart
+          :  video.type  == "upload"
           ? video.uploadDate
           : video.liveSchedule;
 
@@ -161,11 +159,11 @@ import AppConfig from "@/domain/AppConfig";
           ? "明日"
           : "";
       const suffix =
-        type == "live" || type == "archive"
+         video.type  == "live" && video.status  != "reserve" 
           ? "～"
-          : type == "premier"
+          :  video.type  == "premier" && video.status == "reserve"
           ? " 公開予定"
-          : type == "schedule"
+          :  video.type  == "live" &&  video.status == "reserve"
           ? " 配信予定"
           : "";
 
@@ -214,10 +212,10 @@ import AppConfig from "@/domain/AppConfig";
     },
 
     videoThumbnailMiniUrl: function (id: string) {
-      return `${AppConfig.apiUrl}/image/video/${id}/thumbnail_mini`;
+      return `${AppConfig.apiUrl}/image/video/${id}/176x98`;
     },
     channelThumbnailUrl: function (id: string) {
-      return `${AppConfig.apiUrl}/image/channel/${id}/thumbnail`;
+      return `${AppConfig.apiUrl}/image/channel/${id}`;
     },
   },
 })
@@ -241,11 +239,11 @@ export default class VideoCard extends Vue {
   }
 
   genarateViews(video: Video) {
-    if (video.fieldType == "live") {
+    if (video.status == "stream") {
       if (video.liveViews == null) return "👤取得中";
       return `👤${this.numberFormat(video.liveViews)}`;
     }
-    if (video.fieldType == "archive" || video.fieldType == "upload")
+    if (video.status == "archive" || video.status == "none")
       return `▶${this.numberFormat(video.views)}`;
     return "";
   }

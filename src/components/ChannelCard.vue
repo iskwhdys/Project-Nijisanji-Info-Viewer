@@ -44,7 +44,7 @@ import ChannelVideos from "@/components/ChannelVideos.vue";
       return count + "人";
     },
     channelThumbnailUrl: function(id: string) {
-      return `${AppConfig.apiUrl}/image/channel/${id}/thumbnail`;
+      return `${AppConfig.apiUrl}/image/channel/${id}`;
     },
   },
 })

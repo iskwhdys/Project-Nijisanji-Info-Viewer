@@ -9,9 +9,9 @@ export class AppConfig {
 
   public get apiUrl(): string {
     // 本番用
-    return process.env.VUE_APP_API_ENDPOINT;
+    //return process.env.VUE_APP_API_ENDPOINT;
     // 開発用-ローカル
-    //return "http://192.168.11.7:8090/api";
+    return "http://192.168.11.6:8080/api";
   }
 
   public get isMaintenance(): boolean {

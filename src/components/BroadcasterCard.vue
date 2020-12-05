@@ -59,7 +59,7 @@ import { Channel } from "@/types/channel.ts";
       return count + "人";
     },
     icomlUrl: function(id: string) {
-      return `${AppConfig.apiUrl}/image/broadcaster/${id}`;
+      return `${AppConfig.apiUrl}/image/liver/${id}/64x64w`;
     },
     youtubelUrl: function(id: string) {
       return `https://www.youtube.com/channel/${id}`;

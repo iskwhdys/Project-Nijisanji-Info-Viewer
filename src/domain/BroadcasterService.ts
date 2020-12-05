@@ -15,7 +15,7 @@ export class BroadcasterService {
   readonly BASE_URL = AppCongig.apiUrl;
 
   async getActive(): Promise<Broadcaster[]> {
-    const url = this.BASE_URL + "/broadcaster";
+    const url = this.BASE_URL + "/liver";
 
     const channels = await ChannelService.getAllChannel();
 
@@ -31,7 +31,7 @@ export class BroadcasterService {
   }
 
   async get(id: string): Promise<Broadcaster> {
-    const url = `${this.BASE_URL}/broadcaster/${id}`;
+    const url = `${this.BASE_URL}/liver/${id}`;
     return (await Axios.get(url, {})).data;
   }
 

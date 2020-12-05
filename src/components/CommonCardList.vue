@@ -226,8 +226,7 @@ export default class CommonCardList extends Vue {
     try {
       field.videos.splice(0, field.videos.length);
       const data: Video[] = await VideoService.getFieldVideo(
-        field.id,
-        field.reload.id
+        field.id
       );
       data.forEach((d) => field.videos.push(d));
       this.filterChange(field.videos);
@@ -237,22 +236,24 @@ export default class CommonCardList extends Vue {
     field.reload.flag = false;
   }
 
+
   async getVideos(field: any) {
     field.get.flag = true;
     try {
       const lastVideo = field.videos[field.videos.length - 1];
-      const date =
+      const date:Date =
         field.id == "upload"
           ? lastVideo.uploadDate
           : field.id == "live" || field.id == "archive"
           ? lastVideo.liveStart
           : lastVideo.liveSchedule;
-      const from = moment(date).format("YYYY-MM-DD HH:mm:ss");
+        date.setHours(date.getHours() - 9);
+      const from = moment(date).format("YYYY-MM-DDTHH:mm:ss");
 
       const videos: Video[] = await VideoService.getFieldVideoFrom(
         field.id,
-        field.get.id,
-        from
+        from,        
+        field.get.count
       );
       videos.forEach((d) => field.videos.push(d));
       this.filterChange(field.videos);

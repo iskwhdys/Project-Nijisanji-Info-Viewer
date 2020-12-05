@@ -10,11 +10,11 @@ export interface Video {
   liveSchedule: Date;
   liveViews: number;
   type: string;
+  status: string;
   channelId: string;
   // channelTitle: string;
 
   rank: Rank;
-  fieldType: string;
 }
 
 export enum Rank {
