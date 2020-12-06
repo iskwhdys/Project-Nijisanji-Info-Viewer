@@ -94,7 +94,7 @@ v-card-text {
               <div class="info-text">{{ video | generateStartTime }}</div>
               <span class="info-text">
                 <span>{{ genarateViews(video) }}</span>
-                <span v-if="video.likes != 0">
+                <span v-if="video.likes != 0 && video.likes">
                   👍{{ numberFormat(video.likes) }}
                   <span
                     v-if="!($vuetify.breakpoint.xs && showIcon)"
@@ -137,8 +137,8 @@ import AppConfig from "@/domain/AppConfig";
     generateStartTime: function (video: Video) {
       const startDate =
          video.type  == "live" && video.status  != "reserve"  ? video.liveStart
-          :  video.type  == "upload"
-          ? video.uploadDate
+          :  video.type  == "upload" || video.status == "archive"
+          ? (video.uploadDate ? video.uploadDate : video.published)
           : video.liveSchedule;
 
       const start = moment(startDate).format("YYYY/MM/DD");

@@ -52,15 +52,17 @@ export default class ChannelVideos extends Vue {
 
   async setVideoData() {
     this.videos.splice(0);
-    (await VideoService.getChannelVideo(this.channel.id, "new", "")).forEach(v => this.videos.push(v));
+    (await VideoService.getChannelVideo(this.channel.id, "", 0)).forEach(v => this.videos.push(v));
   }
 
   async getVideos() {
     this.loading = true;
 
     const video = this.videos[this.videos.length - 1];
-    const from = moment(video.uploadDate).format("YYYY-MM-DD HH:mm:ss");
-    (await VideoService.getChannelVideo(this.channel.id, "get", from)).forEach(v => this.videos.push(v));
+    let date :Date = video.published;
+    date.setHours(date.getHours() - 9);
+    const from = moment(date).format("YYYY-MM-DDTHH:mm:ss");
+    (await VideoService.getChannelVideo(this.channel.id, from, 30)).forEach(v => this.videos.push(v));
 
     this.loading = false;
   }

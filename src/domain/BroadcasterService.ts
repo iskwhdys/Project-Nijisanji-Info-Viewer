@@ -36,7 +36,7 @@ export class BroadcasterService {
   }
 
   async getFromChannel(channelId: string): Promise<Broadcaster> {
-    const url = `${this.BASE_URL}/broadcaster?channelId=${channelId}`;
+    const url = `${this.BASE_URL}/liver?channelId=${channelId}`;
     const broadcaster: Broadcaster = (await Axios.get(url, {})).data[0];
     broadcaster.channel = await ChannelService.get(broadcaster.youtube);
     if (broadcaster.youtube2) {

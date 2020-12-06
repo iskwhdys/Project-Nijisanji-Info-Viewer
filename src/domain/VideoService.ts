@@ -14,11 +14,17 @@ export class VideoService {
 
   readonly BASE_URL = AppConfig.apiUrl;
   private async get(url: string): Promise<Video[]> {
+   console.log(url);
+    
     const data: Video[] = (await Axios.get(url, {})).data;
     const hour: number = 9;
 
     data.forEach(d => {
       this.setVideoRank(d);
+      if(d.published != undefined){
+        d.published = new Date(d.published);
+        d.published.setHours(d.published.getHours() + hour);
+      }
       if(d.liveSchedule != undefined){
         d.liveSchedule = new Date(d.liveSchedule);
         d.liveSchedule.setHours(d.liveSchedule.getHours() + hour);
@@ -57,22 +63,26 @@ export class VideoService {
 
     return result;
   }
-  async getChannelVideo(channelId: string, mode: string, from: string): Promise<Video[]> {
-    const data: Video[] = await this.get(`${this.BASE_URL}/video/channel/${channelId}?mode=${mode}&from=${from}`);
+  async getChannelVideo(channelId: string, from: string, count:number): Promise<Video[]> {
+    let url = `${this.BASE_URL}/video/channel/${channelId}`;
+    if(from != ""){
+       url = `${url}?from=${from}&count=${count}`;
+    }
+    const data: Video[] = await this.get(url);
 
     let result: Video[] = [];
 
     // 予定を抽出
     data.forEach(d => {
-      if (d.type == "PremierReserve" || d.type == "LiveReserve") result.push(d);
+      if (d.status == "reserve") result.push(d);
     });
     // ライブを抽出
     data.forEach(d => {
-      if (d.type == "PremierLive" || d.type == "LiveLive") result.push(d);
+      if (d.status == "stream" ) result.push(d);
     });
     // 上記以外を抽出
     data.forEach(d => {
-      if (d.type != "PremierReserve" && d.type != "LiveReserve" && d.type != "PremierLive" && d.type != "LiveLive") {
+      if (d.status != "reserve" && d.status != "stream") {
         result.push(d);
       }
     });

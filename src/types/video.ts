@@ -6,12 +6,13 @@ export interface Video {
   dislikes: number;
   duration: number;
   uploadDate: Date;
+  published: Date;
   liveStart: Date;
   liveSchedule: Date;
   liveViews: number;
   type: string;
   status: string;
-  channelId: string;
+  channel: string;
   // channelTitle: string;
 
   rank: Rank;

@@ -209,11 +209,11 @@ export default class CommonCardList extends Vue {
     if (this.showChannelCard == false) {
       try {
         this.broadcaster = await BroadcasterService.getFromChannel(
-          video.channelId
+          video.channel
         );
         this.channel = null;
       } catch (error) {
-        this.channel = await ChannelService.get(video.channelId);
+        this.channel = await ChannelService.get(video.channel);
         this.broadcaster = null;
       }
     }
