@@ -1,7 +1,6 @@
 import Axios from 'axios';
 import AppConfig from "@/domain/AppConfig";
 import { Video, Rank } from "@/types/video.ts";
-import { Channel } from "@/types/channel.ts";
 
 export class VideoService {
   private static INSTANCE: VideoService;
@@ -14,7 +13,7 @@ export class VideoService {
 
   readonly BASE_URL = AppConfig.apiUrl;
   private async get(url: string): Promise<Video[]> {
-   console.log(url);
+   // console.log(url);
     
     const data: Video[] = (await Axios.get(url, {})).data;
     const hour: number = 9;
