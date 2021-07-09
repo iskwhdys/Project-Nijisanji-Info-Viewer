@@ -14,6 +14,13 @@ export class WebStorage {
     this.setBoolean("filterArk", value);
   }
 
+  public get filterApex(): boolean {
+    return this.getBoolean("filterApex", false);
+  }
+  public set filterApex(value: boolean) {
+    this.setBoolean("filterApex", value);
+  }
+
   public get enabledAutoReload(): boolean {
     return this.getBoolean("enabledAutoReload", false);
   }
@@ -64,7 +71,12 @@ export class WebStorage {
   }
 
 
-
+  public get filterChannelId(): string[] {
+    return this.getString("filterChannelId", "").split(",");
+  }
+  public set filterChannelId(value: string[]) {
+    this.setString("filterChannelId", value.join(","));
+  }
 
 
   private setBoolean(key: string, value: boolean) {

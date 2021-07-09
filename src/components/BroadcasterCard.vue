@@ -43,11 +43,13 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import moment from "moment";
 
 import AppConfig from "@/domain/AppConfig";
+import WebStorage from "@/domain/WebStorage";
+
 import VideoService from "@/domain/VideoService";
 
-import { Video, VideoCommon } from "@/types/video.ts";
-import { Broadcaster } from "@/types/broadcaster.ts";
-import { Channel } from "@/types/channel.ts";
+import { Video, VideoCommon } from "@/types/video";
+import { Broadcaster } from "@/types/broadcaster";
+import { Channel } from "@/types/channel";
 
 @Component({
   components: {},

@@ -67,6 +67,14 @@
                 hide-details="false"
                 v-if="false"
               />
+              <v-checkbox
+                class="my-0 py-0"
+                dense
+                v-model="filterApex"
+                label="APEXを除外"
+                hide-details="false"
+                v-if="false"
+              />
             </v-row>
           </v-container>
         </h3>
@@ -127,7 +135,7 @@ import WebStorage from "@/domain/WebStorage";
 
 import { Broadcaster } from "@/types/broadcaster";
 import { Channel } from "@/types/channel";
-import { Video, Rank, VideoCommon } from "@/types/video.ts";
+import { Video, Rank, VideoCommon } from "@/types/video";
 
 import VideoCard from "@/components/VideoCard.vue";
 import ChannelCard from "@/components/ChannelCard.vue";
@@ -150,6 +158,7 @@ export default class CommonCardList extends Vue {
   channel: Channel | null = null;
 
   filterArk: boolean = false;
+  filterApex: boolean = false;
   enabledAutoReload: boolean = false;
   reloadCount: number = -1;
   timerId: number = -1;
@@ -172,7 +181,8 @@ export default class CommonCardList extends Vue {
       this.enabledAutoReload = WebStorage.enabledAutoReload;
     }
 
-    // this.filterArk = WebStorage.filterArk;
+    this.filterArk = WebStorage.filterArk;
+    this.filterApex = WebStorage.filterApex;
   }
 
   @Watch("filterArk")
@@ -180,6 +190,13 @@ export default class CommonCardList extends Vue {
     this.filterChange(this.field.videos);
     WebStorage.filterArk = this.filterArk;
     this.$ga.event("CommonCardList", "FilterARK", this.filterArk + "");
+  }
+
+  @Watch("filterApex")
+  changeFilterApex() {
+    this.filterChange(this.field.videos);
+    WebStorage.filterApex = this.filterApex;
+    this.$ga.event("CommonCardList", "filterApex", this.filterApex + "");
   }
 
   @Watch("enabledAutoReload")
@@ -267,11 +284,18 @@ export default class CommonCardList extends Vue {
   filterChange(videos: Video[]) {
     this.filterVideos.splice(0, this.filterVideos.length);
     videos.forEach((d) => {
-      if (this.filterArk) {
-        if (d.title.includes("ARK")) {
-          return;
-        }
-      }
+
+
+      // if (this.filterArk) {
+      //   if (d.title.includes("ARK")) {
+      //     return;
+      //   }
+      // }
+      // if (this.filterApex) {
+      //   if (d.title.toLowerCase().includes("apex") || d.title.toLowerCase().includes("にじpex") ) {
+      //     return;
+      //   }
+      // }
 
       if (this.filters[d.rank].value) {
         this.filterVideos.push(d);
