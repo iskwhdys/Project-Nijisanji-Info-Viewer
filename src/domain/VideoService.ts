@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import AppConfig from "@/domain/AppConfig";
-import { Video, Rank } from "@/types/video.ts";
+import { Video, Rank } from "@/types/video";
 
 export class VideoService {
   private static INSTANCE: VideoService;
@@ -13,8 +13,6 @@ export class VideoService {
 
   readonly BASE_URL = AppConfig.apiUrl;
   private async get(url: string): Promise<Video[]> {
-   // console.log(url);
-    
     const data: Video[] = (await Axios.get(url, {})).data;
     const hour: number = 9;
 
@@ -30,38 +28,16 @@ export class VideoService {
       }
       if(d.liveStart != undefined){
         d.liveStart = new Date(d.liveStart);
-      d.liveStart.setHours(d.liveStart.getHours() + hour);
+        d.liveStart.setHours(d.liveStart.getHours() + hour);
       }
       if(d.uploadDate != undefined){
         d.uploadDate = new Date(d.uploadDate);
-      d.uploadDate.setHours(d.uploadDate.getHours() + hour);
+        d.uploadDate.setHours(d.uploadDate.getHours() + hour);
       }
     });
     return data;
   }
 
-  async getBroadcasterVideo(channelId: string, mode: string, from: string): Promise<Video[]> {
-    const data: Video[] = await this.get(`${this.BASE_URL}/video/channel/${channelId}?mode=${mode}&from=${from}`);
-
-    let result: Video[] = [];
-
-    // 予定を抽出
-    data.forEach(d => {
-      if (d.status == "reserve") result.push(d);
-    });
-    // ライブを抽出
-    data.forEach(d => {
-      if (d.status == "stream" ) result.push(d);
-    });
-    // 上記以外を抽出
-    data.forEach(d => {
-      if (d.status != "reserve" && d.status != "stream" ) {
-        result.push(d);
-      }
-    });
-
-    return result;
-  }
   async getChannelVideo(channelId: string, from: string, count:number): Promise<Video[]> {
     let url = `${this.BASE_URL}/video/channel/${channelId}`;
     if(from != ""){
@@ -90,11 +66,11 @@ export class VideoService {
   }
 
   async getFieldVideo(field: string): Promise<Video[]> {
-    return await this.get(`${this.BASE_URL}/video/${field}`);
+    return this.get(`${this.BASE_URL}/video/${field}`);
   }
 
   async getFieldVideoFrom(field: string,  from: string, count: number): Promise<Video[]> {
-    return await this.get(`${this.BASE_URL}/video/${field}?&from=${from}&count=${count}`);
+    return this.get(`${this.BASE_URL}/video/${field}?&from=${from}&count=${count}`);
   }
 
   private setVideoRank(video: Video) {

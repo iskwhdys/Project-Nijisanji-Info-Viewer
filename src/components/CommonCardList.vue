@@ -57,7 +57,7 @@
                 width="3"
                 v-if="enabledAutoReload"
                 :buffer-value="100"
-                :value="100 / RELOAD_TIME *  reloadCount"
+                :value="(100 / RELOAD_TIME) * reloadCount"
               />
               <v-checkbox
                 class="my-0 py-0"
@@ -65,7 +65,7 @@
                 v-model="filterArk"
                 label="ARKを除外"
                 hide-details="false"
-                v-if="false"
+                v-if="showFilterArk"
               />
             </v-row>
           </v-container>
@@ -76,7 +76,11 @@
 
     <v-row dense justify="start">
       <v-col xl="2" v-for="video in filterVideos" :key="video.id">
-        <VideoCard v-on:child-event="showChannelPanel(video)" :video="video" :showIcon="true" />
+        <VideoCard
+          v-on:child-event="showChannelPanel(video)"
+          :video="video"
+          :showIcon="true"
+        />
       </v-col>
 
       <v-col v-if="field.get" cols="12" align-items="center">
@@ -102,7 +106,10 @@
           :icon="'mdi-close'"
         />
         <ChannelVideos :channel="broadcaster.channel" />
-        <ChannelVideos :channel="broadcaster.channel2" v-if="broadcaster.channel2" />
+        <ChannelVideos
+          :channel="broadcaster.channel2"
+          v-if="broadcaster.channel2"
+        />
       </div>
       <div v-if="showChannelCard && channel">
         <ChannelCard
@@ -116,9 +123,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop, Mixins, Watch } from "vue-property-decorator";
+import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import moment from "moment";
-import VueAnalytics from "vue-analytics";
 
 import VideoService from "@/domain/VideoService";
 import ChannelService from "@/domain/ChannelService";
@@ -127,7 +133,7 @@ import WebStorage from "@/domain/WebStorage";
 
 import { Broadcaster } from "@/types/broadcaster";
 import { Channel } from "@/types/channel";
-import { Video, Rank, VideoCommon } from "@/types/video.ts";
+import { Video, Rank, VideoCommon } from "@/types/video";
 
 import VideoCard from "@/components/VideoCard.vue";
 import ChannelCard from "@/components/ChannelCard.vue";
@@ -144,6 +150,9 @@ import ChannelVideos from "@/components/ChannelVideos.vue";
 })
 export default class CommonCardList extends Vue {
   @Prop() private field!: any;
+
+  // Arkを除外フィルターの有効化
+  showFilterArk: boolean = false;
 
   showChannelCard: boolean = false;
   broadcaster: Broadcaster | null = null;
@@ -172,7 +181,9 @@ export default class CommonCardList extends Vue {
       this.enabledAutoReload = WebStorage.enabledAutoReload;
     }
 
-    // this.filterArk = WebStorage.filterArk;
+    if (this.showFilterArk) {
+      this.filterArk = WebStorage.filterArk;
+    }
   }
 
   @Watch("filterArk")
@@ -225,9 +236,7 @@ export default class CommonCardList extends Vue {
     field.reload.flag = true;
     try {
       field.videos.splice(0, field.videos.length);
-      const data: Video[] = await VideoService.getFieldVideo(
-        field.id
-      );
+      const data: Video[] = await VideoService.getFieldVideo(field.id);
       data.forEach((d) => field.videos.push(d));
       this.filterChange(field.videos);
     } catch (error) {
@@ -236,23 +245,17 @@ export default class CommonCardList extends Vue {
     field.reload.flag = false;
   }
 
-
   async getVideos(field: any) {
     field.get.flag = true;
     try {
       const lastVideo = field.videos[field.videos.length - 1];
-      const date:Date =
-        field.id == "upload"
-          ? lastVideo.uploadDate
-          : field.id == "live" || field.id == "archive"
-          ? lastVideo.liveStart
-          : lastVideo.liveSchedule;
-        date.setHours(date.getHours() - 9);
+      const date: Date = this.getVideoDate(field, lastVideo);
+      date.setHours(date.getHours() - 9);
       const from = moment(date).format("YYYY-MM-DDTHH:mm:ss");
 
       const videos: Video[] = await VideoService.getFieldVideoFrom(
         field.id,
-        from,        
+        from,
         field.get.count
       );
       videos.forEach((d) => field.videos.push(d));
@@ -261,6 +264,16 @@ export default class CommonCardList extends Vue {
       //
     }
     field.get.flag = false;
+  }
+
+  getVideoDate(field: any, video: Video): Date {
+    if (field.id == "upload") {
+      return new Date(video.uploadDate);
+    }
+    if (field.id == "live" || field.id == "archive") {
+      return new Date(video.liveStart);
+    }
+    return new Date(video.liveSchedule);
   }
 
   filterVideos: Video[] = [];
