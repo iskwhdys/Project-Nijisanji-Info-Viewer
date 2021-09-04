@@ -41,6 +41,7 @@ import ChannelVideos from "@/components/ChannelVideos.vue";
       if (10000 > count) return count + "人";
       if (100000 > count) return (count / 10000).toFixed(2) + "万人";
       if (1000000 > count) return (count / 10000).toFixed(1) + "万人";
+      if (10000000 > count) return count / 10000 + "万人";
       return count + "人";
     },
     channelThumbnailUrl: function(id: string) {
